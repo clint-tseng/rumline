@@ -38,6 +38,6 @@ int main(void)
 
   struct mark after;
   deserialize_mark(&after, buffer);
-  printf("reinflated:\nid: %d\nlat: %f\nlon: %f\nname: %s", after.id, after.lat, after.lon, after.name);
+  printf("reinflated:\nid: %d\nlat: %f\nlon: %f\nname: %s\n", after.id, after.lat, after.lon, after.name);
 }
 

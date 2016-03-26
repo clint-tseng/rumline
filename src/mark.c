@@ -76,20 +76,18 @@ void serialize_mark(struct mark* it, void* buffer)
 
 void deserialize_mark(struct mark* it, void* buffer)
 {
-  size_t read = 0;
+  it->id = *(short*)buffer;
+  buffer += sizeof it->id;
 
-  it->id = (short) *(short*)buffer;
-  read += sizeof it->id;
+  it->lat = *(double*) buffer;
+  buffer += sizeof it->lat;
+  it->lon = *(double*) buffer;
+  buffer += sizeof it->lon;
 
-  it->lat = (double) *(double*)(buffer + read);
-  read += sizeof it->lat;
-  it->lon = (double) *(double*)(buffer + read);
-  read += sizeof it->lon;
-
-  size_t name_length = (short) *(short*)(buffer + read);
-  read += sizeof (short);
+  size_t name_length = *(short*) buffer;
+  buffer += sizeof (short);
 
   it->name = malloc(name_length);
-  strncpy(it->name, buffer + read, name_length);
+  strncpy(it->name, buffer, name_length);
 }
 
