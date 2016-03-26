@@ -1,0 +1,19 @@
+{
+  "uuid": "4262da00-474a-4fc1-a363-a0dcf654f7b8",
+  "shortName": "to-mark",
+  "longName": "To Mark",
+  "companyName": "Giant Acorn",
+  "versionLabel": "0.1",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt", "chalk"],
+  "enableMultiJS": true,
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
