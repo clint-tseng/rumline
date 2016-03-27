@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include "../src/linked-list.h"
 
+void print_string_list(struct list* l)
+{
+  int size = list_length(l);
+  for (int i = 0; i < size; i++) printf("%s ", (char*) list_nth(l, i));
+}
+
 void test_linked_list()
 {
   char* x = "xylophone";
@@ -33,6 +39,53 @@ void test_linked_list()
 
   list_remove(l, 0);
   printf("list size after remove: %d (expects 0)\n\n", list_length(l));
+
+  list_add(l, x);
+  list_add(l, y);
+  list_add(l, z);
+  printf("list: ");
+  print_string_list(l);
+  printf("\n");
+
+  list_move_up(l, 0);
+  printf("\nmove up 0: ");
+  print_string_list(l);
+  printf("\n  (expects xylophone yankee zebra)");
+
+  list_move_up(l, 1);
+  printf("\nmove up 1: ");
+  print_string_list(l);
+  printf("\n  (expects yankee xylophone zebra)");
+
+  list_move_up(l, 2);
+  printf("\nmove up 2: ");
+  print_string_list(l);
+  printf("\n  (expects yankee zebra xylophone)\n");
+
+  list_move_down(l, 2);
+  printf("\nmove down 2: ");
+  print_string_list(l);
+  printf("\n    (expects yankee zebra xylophone)");
+
+  list_move_down(l, 1);
+  printf("\nmove down 1: ");
+  print_string_list(l);
+  printf("\n    (expects yankee xylophone zebra)");
+
+  list_move_down(l, 0);
+  printf("\nmove down 0: ");
+  print_string_list(l);
+  printf("\n    (expects xylophone yankee zebra)\n\n");
+
+  list_remove(l, 0);
+  list_remove(l, 0);
+
+  list_move_up(l, 0);
+  list_move_down(l, 0);
+
+  printf("one item move: ");
+  print_string_list(l);
+  printf("\n      (expects zebra)\n\n");
 
   list_destruct(l);
 

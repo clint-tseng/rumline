@@ -82,6 +82,58 @@ void list_remove(struct list* it, int n)
   free(removed); // probably bad form
 }
 
+void list_move_up(struct list* it, int n)
+{
+  if (n == 0) return;
+
+  if (n == 1)
+  {
+    struct listitem* tgt = _list_nth(it, 1);
+    if (tgt == NULL) return;
+
+    struct listitem* cdr = tgt->next; // x tgt cdr
+    tgt->next = it->head;             // x tgt x | cdr
+    it->head = tgt;                   // tgt x tgt | cdr
+    tgt->next->next = cdr;            // tgt x cdr
+  }
+  else
+  {
+    struct listitem* ptr = _list_nth(it, n - 2);
+    if (ptr == NULL || ptr->next == NULL || ptr->next->next == NULL) return;
+
+    struct listitem* x = ptr->next; // ptr x tgt y
+    ptr->next = x->next;            // ptr tgt y | x tgt
+    x->next = ptr->next->next;      // ptr tgt y | x y
+    ptr->next->next = x;            // ptr tgt x y
+  }
+}
+
+void list_move_down(struct list* it, int n)
+{
+  if (n == (list_length(it) - 1)) return;
+
+  if (n == 0)
+  {
+    struct listitem* x = it->head;
+    if (x->next == NULL) return;
+
+    struct listitem* tgt = x->next; // x tgt cdr
+    x->next = tgt->next;            // x cdr | tgt cdr
+    it->head = tgt;                 // tgt cdr | x cdr
+    tgt->next = x;                  // tgt x cdr
+  }
+  else
+  {
+    struct listitem* ptr = _list_nth(it, n - 1);
+    if (ptr == NULL || ptr->next == NULL) return;
+
+    struct listitem* tgt = ptr->next; // ptr tgt x y
+    ptr->next = tgt->next;            // ptr x | tgt | y
+    tgt->next = ptr->next->next;      // ptr x | tgt y
+    ptr->next->next = tgt;            // ptr x tgt y
+  }
+}
+
 void list_destruct(struct list* it)
 {
   while (it->head != NULL) list_remove(it, 0);

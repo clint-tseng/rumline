@@ -21,6 +21,9 @@ void* list_nth(struct list* it, int n);
 void list_add(struct list* it, void* data);
 void list_remove(struct list* it, int n);
 
+void list_move_up(struct list* it, int n);
+void list_move_down(struct list* it, int n);
+
 void list_destruct(struct list* it);
 
 #endif
