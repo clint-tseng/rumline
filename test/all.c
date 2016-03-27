@@ -3,7 +3,8 @@
 
 int main(void)
 {
-  test_mark();
   test_linked_list();
+  test_mark();
+  test_marks();
 }
 

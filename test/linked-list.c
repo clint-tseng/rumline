@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "../src/linked-list.c"
+#include <stdlib.h>
+#include "../src/linked-list.h"
 
 void test_linked_list()
 {

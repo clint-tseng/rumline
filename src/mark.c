@@ -1,7 +1,9 @@
-#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#include "./mark.h"
+#include "./linked-list.h"
 
 const int EARTH_METERS = 6371000;
 const int NM = 1852;
@@ -9,16 +11,7 @@ const double PI = 3.14159265358979323846264338327;
 
 double to_radians(double deg) { return deg / 180 * PI; }
 double to_degrees(double rad) { return rad * 180 / PI; }
-//double clean_degrees(double deg) { return deg + 360 % 360; }
 double square(double x) { return x * x; }
-
-struct mark
-{
-  short id;
-  char* name;
-  double lat;
-  double lon;
-};
 
 double mark_distance(struct mark* from, struct mark* to)
 {
@@ -91,5 +84,16 @@ void deserialize_mark(struct mark* it, void* buffer)
   strncpy(it->name, buffer, name_length);
 }
 
-//void serialize_marks(struct mar
+size_t size_marks(struct list* mark_list)
+{
+  size_t mark_sizes = 0;
+  int mark_count = list_length(mark_list);
+  for (int i = 0; i < mark_count; i++) mark_sizes += size_mark((struct mark*) list_nth(mark_list, i));
+
+  return (sizeof (short)) + mark_sizes;
+}
+
+void serialize_marks(struct list* mark_list, void* buffer)
+{
+}
 

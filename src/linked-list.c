@@ -1,16 +1,6 @@
 // cheapo linked list impl.
 #include <stdlib.h>
-
-struct listitem
-{
-  void* data;
-  struct listitem* next;
-};
-
-struct list
-{
-  struct listitem* head;
-};
+#include "./linked-list.h"
 
 void list_init(struct list* it)
 {

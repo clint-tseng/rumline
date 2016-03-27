@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/mark.c"
+
+#include "../src/mark.h"
+#include "../src/linked-list.h"
 
 void test_mark()
 {
@@ -39,5 +41,20 @@ void test_mark()
   struct mark after;
   deserialize_mark(&after, buffer);
   printf("reinflated:\nid: %d\nlat: %f\nlon: %f\nname: %s\n\n", after.id, after.lat, after.lon, after.name);
+}
+
+void test_marks()
+{
+  struct mark x;
+  x.id = 1;
+  x.lat = 47;
+  x.lon = -122;
+  x.name = "x mark";
+
+  struct mark y;
+  y.id = 2;
+  y.lat = 49;
+  y.lon = -121;
+  y.name = "y mark";
 }
 
