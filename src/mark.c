@@ -91,3 +91,5 @@ void deserialize_mark(struct mark* it, void* buffer)
   strncpy(it->name, buffer, name_length);
 }
 
+//void serialize_marks(struct mar
+

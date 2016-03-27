@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "../src/mark.c"
 
-int main(void)
+void test_mark()
 {
   struct mark from;
   from.id = 1;
@@ -38,6 +38,6 @@ int main(void)
 
   struct mark after;
   deserialize_mark(&after, buffer);
-  printf("reinflated:\nid: %d\nlat: %f\nlon: %f\nname: %s\n", after.id, after.lat, after.lon, after.name);
+  printf("reinflated:\nid: %d\nlat: %f\nlon: %f\nname: %s\n\n", after.id, after.lat, after.lon, after.name);
 }
 
