@@ -95,5 +95,29 @@ size_t size_marks(struct list* mark_list)
 
 void serialize_marks(struct list* mark_list, void* buffer)
 {
+  *(short*) buffer = list_length(mark_list);
+  buffer += sizeof (short);
+
+  int mark_count = list_length(mark_list);
+  for (int i = 0; i < mark_count; i++)
+  {
+    struct mark* m = (struct mark*) list_nth(mark_list, i);
+    serialize_mark(m, buffer);
+    buffer += size_mark(m);
+  }
+}
+
+void deserialize_marks(struct list* mark_list, void* buffer)
+{
+  int mark_count = *(short*) buffer;
+  buffer += sizeof (short);
+
+  for (int i = 0; i < mark_count; i++)
+  {
+    struct mark* m = malloc(sizeof (struct mark));
+    deserialize_mark(m, buffer);
+    list_add(mark_list, m);
+    buffer += size_mark(m);
+  }
 }
 

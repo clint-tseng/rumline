@@ -79,7 +79,7 @@ void list_remove(struct list* it, int n)
   struct listitem* removed = ptr->next;
   ptr->next = ptr->next->next;
 
-  free(removed);
+  free(removed); // probably bad form
 }
 
 void list_destruct(struct list* it)
