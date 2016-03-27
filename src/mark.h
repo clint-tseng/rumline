@@ -5,7 +5,6 @@
 
 struct mark
 {
-  short id;
   char* name;
   double lat;
   double lon;

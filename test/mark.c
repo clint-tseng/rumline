@@ -15,19 +15,17 @@ void print_bytes(void* buffer, size_t bytes)
 
 void print_mark(struct mark* m)
 {
-  printf("id: %d\nlat: %f\nlon: %f\nname: %s\n", m->id, m->lat, m->lon, m->name);
+  printf("lat: %f\nlon: %f\nname: %s\n", m->lat, m->lon, m->name);
 }
 
 void test_mark()
 {
   struct mark from;
-  from.id = 1;
   from.lat = 47;
   from.lon = -122;
   from.name = "from mark";
 
   struct mark to;
-  to.id = 2;
   to.lat = 49;
   to.lon = -121;
   to.name = "to mark";
@@ -38,7 +36,7 @@ void test_mark()
   printf("\n");
 
   size_t bytes = size_mark(&from);
-  printf("bytes: %d (expects 30)\n", (int) bytes);
+  printf("bytes: %d (expects 28)\n", (int) bytes);
 
   void* buffer = malloc(bytes);
   serialize_mark(&from, buffer);
@@ -58,13 +56,11 @@ void test_mark()
 void test_marks()
 {
   struct mark x;
-  x.id = 1;
   x.lat = 47;
   x.lon = -122;
   x.name = "x mark";
 
   struct mark y;
-  y.id = 2;
   y.lat = 49;
   y.lon = -121;
   y.name = "y mark";
@@ -75,7 +71,7 @@ void test_marks()
   list_add(l, &y);
 
   size_t bytes = size_marks(l);
-  printf("mark list in bytes: %d (expects 56)\n", (int) bytes);
+  printf("mark list in bytes: %d (expects 52)\n", (int) bytes);
 
   void* buffer = malloc(bytes);
   serialize_marks(l, buffer);

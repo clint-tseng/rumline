@@ -47,14 +47,11 @@ double mark_bearing(struct mark* from, struct mark* to)
 
 size_t size_mark(struct mark* it)
 {
-  return (sizeof it->id) + (sizeof it->lat) + (sizeof it->lon) + (sizeof (short)) + strlen(it->name) + 1;
+  return (sizeof it->lat) + (sizeof it->lon) + (sizeof (short)) + strlen(it->name) + 1;
 }
 
 void serialize_mark(struct mark* it, void* buffer)
 {
-  *(short*) buffer = it->id;
-  buffer += sizeof it->id;
-
   *(double*) buffer = it->lat;
   buffer += sizeof it->lat;
   *(double*) buffer = it->lon;
@@ -69,9 +66,6 @@ void serialize_mark(struct mark* it, void* buffer)
 
 void deserialize_mark(struct mark* it, void* buffer)
 {
-  it->id = *(short*)buffer;
-  buffer += sizeof it->id;
-
   it->lat = *(double*) buffer;
   buffer += sizeof it->lat;
   it->lon = *(double*) buffer;
