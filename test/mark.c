@@ -1,22 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "./util.h"
 #include "../src/mark.h"
 #include "../src/linked-list.h"
-
-void print_bytes(void* buffer, size_t bytes)
-{
-  for (int i = 0; i < ((int) bytes); i++)
-  {
-    printf("%02x ", *(unsigned char*) (buffer + i) & 0xff);
-    if (((i + 1) % 16) == 0) printf("\n");
-  }
-}
-
-void print_mark(struct mark* m)
-{
-  printf("lat: %f\nlon: %f\nname: %s\n", m->lat, m->lon, m->name);
-}
 
 void test_mark()
 {
