@@ -15,6 +15,7 @@ size_t size_group(struct group* g);
 void serialize_group(struct group* g, void* buffer);
 void deserialize_group(struct group* g, void* buffer);
 
+void group_free_marks(struct group* g);
 void group_destruct(struct group* g);
 
 #endif

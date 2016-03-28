@@ -41,6 +41,12 @@ void deserialize_group(struct group* g, void* buffer)
   strncpy(g->name, buffer, name_length);
 }
 
+void group_free_marks(struct group* g)
+{
+  int mark_count = list_length(g->marks);
+  for (int i = 0; i < mark_count; i++) free(list_nth(g->marks, i));
+}
+
 void group_destruct(struct group* g)
 {
   list_destruct(g->marks);
