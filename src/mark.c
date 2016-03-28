@@ -13,6 +13,24 @@ double to_radians(double deg) { return deg / 180 * PI; }
 double to_degrees(double rad) { return rad * 180 / PI; }
 double square(double x) { return x * x; }
 
+// custom_sqrt copied from pebble forums.
+// https://forums.getpebble.com/discussion/5792/sqrt-function
+double custom_sqrt(const double num)
+{
+  const unsigned int MAX_STEPS = 40;
+  const double MAX_ERROR = 0.001;
+  
+  double answer = num;
+  double ans_sqr = answer * answer;
+  unsigned int step = 0;
+  while ((ans_sqr - num > MAX_ERROR) && (step++ < MAX_STEPS))
+  {
+    answer = (answer + (num / answer)) / 2;
+    ans_sqr = answer * answer;
+  }
+  return answer;
+}
+
 double mark_distance(struct mark* from, struct mark* to)
 {
   double phi_from = to_radians(from->lat);
@@ -22,7 +40,7 @@ double mark_distance(struct mark* from, struct mark* to)
 
   double a = square(sin(delta_phi / 2)) +
              cos(phi_from) * cos(phi_to) * square(sin(delta_lambda / 2));
-  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+  double c = 2 * atan2(custom_sqrt(a), custom_sqrt(1 - a));
   double d = EARTH_METERS * c;
 
   return d / NM;
@@ -32,10 +50,6 @@ double mark_bearing(struct mark* from, struct mark* to)
 {
   double phi_from = to_radians(from->lat);
   double phi_to = to_radians(to->lat);
-  double delta_phi = to_radians(to->lat - from->lat);
-
-  double lambda_from = to_radians(from->lon);
-  double lambda_to = to_radians(to->lon);
   double delta_lambda = to_radians(to->lon - from->lon);
 
   double y = sin(delta_lambda) * cos(phi_to);

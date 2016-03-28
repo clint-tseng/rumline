@@ -11,9 +11,11 @@
     "watchface": false
   },
   "appKeys": {
-    "dummy": 0
+    "lat": 0,
+    "lon": 1
   },
   "resources": {
     "media": []
-  }
+  },
+  "capabilities": [ "geolocation" ]
 }
