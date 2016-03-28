@@ -13,8 +13,6 @@ struct app
   struct mark* current_mark;
 
   bool has_fix;
-  double lat;
-  double lon;
   bool showing_mark;
 };
 typedef struct app App;

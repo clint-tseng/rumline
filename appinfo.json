@@ -9,8 +9,10 @@
   "enableMultiJS": true,
   "watchapp": { "watchface": false },
   "appKeys": {
-    "lat": 0,
-    "lon": 1
+    "bearing": 0,
+    "distance": 1,
+    "lat": 2,
+    "lon": 3
   },
   "resources": {
     "media": []
