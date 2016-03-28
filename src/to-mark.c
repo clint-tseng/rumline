@@ -297,23 +297,23 @@ static void show_main_menu()
 // LAT/LONG UPDATE HANDLER
 static void inbox_received_callback(DictionaryIterator* iter, void* context)
 {
-  Tuple* lat_tuple = dict_find(iter, 0);
-  if (lat_tuple) app->lat = pdos_strtod(lat_tuple->value->cstring, NULL);
-  Tuple* lon_tuple = dict_find(iter, 1);
-  if (lon_tuple) app->lon = pdos_strtod(lon_tuple->value->cstring, NULL);
+  app->lat = pdos_strtod(dict_find(iter, 0)->value->cstring, NULL);
+  app->lon = pdos_strtod(dict_find(iter, 1)->value->cstring, NULL);
+  app->has_fix = true;
 
-  if (lat_tuple && lon_tuple) app->has_fix = true;
   if (app->showing_mark) update_labels();
 }
-
 
 // APP
 
 static void init(void)
 {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "watch: starting up...");
+
   init_test_data();
-  show_main_menu();
+  app_message_open(APP_MESSAGE_INBOX_SIZE_MINIMUM, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
   app_message_register_inbox_received(inbox_received_callback);
+  show_main_menu();
 }
 
 static void deinit(void)

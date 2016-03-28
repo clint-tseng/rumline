@@ -7,9 +7,7 @@
   "sdkVersion": "3",
   "targetPlatforms": ["aplite", "basalt", "chalk"],
   "enableMultiJS": true,
-  "watchapp": {
-    "watchface": false
-  },
+  "watchapp": { "watchface": false },
   "appKeys": {
     "lat": 0,
     "lon": 1
