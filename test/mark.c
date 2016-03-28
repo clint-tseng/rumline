@@ -17,11 +17,6 @@ void test_mark()
   to.lon = -121;
   to.name = "to mark";
 
-  printf("bearing: %f (expects 18.128133)\n", mark_bearing(&from, &to));
-  printf("distance: %f (expects 126.620125)\n", mark_distance(&from, &to));
-
-  printf("\n");
-
   size_t bytes = size_mark(&from);
   printf("bytes: %d (expects 28)\n", (int) bytes);
 
