@@ -1,0 +1,107 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
+font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  vertical-align: baseline;
+  background: transparent; }
+
+body {
+  background-color: #f7f7f7;
+  color: #444;
+  font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 62.5%;
+  line-height: 1; }
+
+.hide {
+  display: none !important; }
+
+.intro {
+  background-color: #444;
+  border-bottom: 2px solid #d41ead;
+  color: #eee;
+  font-size: 1.4em;
+  line-height: 1.2em;
+  margin-bottom: 2em;
+  padding: 1em; }
+
+#main {
+  padding: 0 1em 4em; }
+
+#toolbar {
+  background-color: rgba(50, 50, 50, 0.9);
+  bottom: 0;
+  color: #eee;
+  padding: 1em;
+  position: fixed;
+  width: 100%; }
+
+#templates, .hide {
+  display: none; }
+
+button {
+  background-color: #ddd;
+  border: none;
+    border-top: 2px solid #d41ead;
+  color: #222;
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 1em;
+  outline: none;
+  padding: 0.7em; }
+
+input[type="text"] {
+  background: #e4e4e4;
+  border: none;
+    border-bottom: 2px solid #1ed457;
+  display: block;
+  font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.3em;
+  outline: none;
+  margin-bottom: 0.2em;
+  padding: 0.6em;
+  width: calc(100% - 1.2em); }
+
+label {
+  display: block;
+  font-weight: 700;
+  padding-bottom: 1.5em; }
+
+.group {
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 1em;
+  overflow: hidden;
+  padding-bottom: 2em; }
+  .group .delete-group {
+    float: right; }
+
+.mark {
+  border-left: 4px solid #ccc;
+  margin-bottom: 1em;
+  overflow: hidden;
+  padding-left: 1.5em; }
+  .mark .dms h2 {
+    bottom: 1.5em;
+    clear: both;
+    font-size: 1em;
+    position: relative; }
+  .mark .dms label, .mark .dms input {
+    float: left;
+    margin-right: 0.5em; }
+  .mark .dms label:last-child {
+    float: none;
+    overflow: hidden; }
+  .mark .dms .dms-d {
+    width: 3em; }
+  .mark .dms .dms-m {
+    width: 5em; }
+  .mark .dms .dms-s {
+    width: calc(100% - 3em); }
+  .mark .delete-mark {
+    float: right; }
+
+/*# sourceMappingURL=app.css.map */

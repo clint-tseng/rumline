@@ -98,3 +98,9 @@ Pebble.addEventListener('ready', function()
   });
 });
 
+Pebble.addEventListener('showConfiguration', function()
+{
+  var url = 'http://to-mark.giantacorn.com';
+  Pebble.openURL(url);
+});
+
