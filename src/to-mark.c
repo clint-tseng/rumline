@@ -64,6 +64,13 @@ static void destroy_test_data()
 }
 
 
+// WIRE FORMAT
+typedef enum {
+  dictBearing = 0, dictDistance, dictLat, dictLon,
+  cfgStart, cfgGroup, cfgMarkId, cfgMarkName, cfgEnd
+} dictKey;
+
+
 // MARK TO PHONE
 // ftoa copied from pebble forums.
 // originally written by matthew clark.
@@ -106,10 +113,10 @@ void send_mark_to_phone(struct mark* m)
   {
     char float_buffer[32];
     ftoa(float_buffer, m->lat, 7);
-    dict_write_cstring(dict, 2, float_buffer);
+    dict_write_cstring(dict, dictLat, float_buffer);
 
     ftoa(float_buffer, m->lon, 7);
-    dict_write_cstring(dict, 3, float_buffer);
+    dict_write_cstring(dict, dictLon, float_buffer);
 
     result = app_message_outbox_send();
   }
@@ -339,8 +346,8 @@ static void show_main_menu()
 // LAT/LONG UPDATE HANDLER
 static void inbox_received_callback(DictionaryIterator* iter, void* context)
 {
-  snprintf(text_bearing, sizeof(text_bearing), "%s°", dict_find(iter, 0)->value->cstring);
-  snprintf(text_distance, sizeof(text_distance), "%s", dict_find(iter, 1)->value->cstring);
+  snprintf(text_bearing, sizeof(text_bearing), "%s°", dict_find(iter, dictBearing)->value->cstring);
+  snprintf(text_distance, sizeof(text_distance), "%s", dict_find(iter, dictDistance)->value->cstring);
   app->has_fix = true;
 
   if (app->showing_mark) update_labels();

@@ -12,10 +12,16 @@
     "bearing": 0,
     "distance": 1,
     "lat": 2,
-    "lon": 3
+    "lon": 3,
+
+    "cfgStart": 4,
+    "cfgGroup": 5,
+    "cfgMarkId": 6,
+    "cfgMarkName": 7,
+    "cfgEnd": 8
   },
   "resources": {
     "media": []
   },
-  "capabilities": [ "geolocation" ]
+  "capabilities": [ "geolocation", "configurable" ]
 }
