@@ -100,7 +100,7 @@ Pebble.addEventListener('ready', function()
 
 Pebble.addEventListener('showConfiguration', function()
 {
-  var url = 'http://to-mark.giantacorn.com';
+  var url = 'http://to-mark.giantacorn.com/mark-config';
   Pebble.openURL(url);
 });
 
