@@ -65,21 +65,27 @@ var maybeUpdate = function()
 // i guess Pebble just magicks in from somewhere.
 Pebble.addEventListener('ready', function()
 {
-  // immediately start requesting geolocation.
-  // TODO: wait until we actually need it? battery?
-  // TODO: deal with if the user has denied Pebble GPS.
-  navigator.geolocation.watchPosition(function(position)
+  var geolocated = false;
+  var maybeGeolocate = function()
   {
-    if (position.coords.latitude === lastLat && position.coords.longitude === lastLon) return;
-    lastLat = position.coords.latitude;
-    lastLon = position.coords.longitude;
+    if (geolocated === true) return;
+    geolocated = true;
 
-    maybeUpdate();
-  },
-  {
-    enableHighAccuracy: true,
-    maximumAge: 2 * 60 * 1000 // 2 minutes ago is okay
-  });
+    // start requesting geolocation.
+    // TODO: deal with if the user has denied Pebble GPS.
+    navigator.geolocation.watchPosition(function(position)
+    {
+      if (position.coords.latitude === lastLat && position.coords.longitude === lastLon) return;
+      lastLat = position.coords.latitude;
+      lastLon = position.coords.longitude;
+
+      maybeUpdate();
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 2 * 60 * 1000 // 2 minutes ago is okay
+    });
+  };
 
   // also start listening for marks from the phone.
   Pebble.addEventListener('appmessage', function(event)
@@ -87,6 +93,7 @@ Pebble.addEventListener('ready', function()
     tgtLat = parseFloat(event.payload.lat);
     tgtLon = parseFloat(event.payload.lon);
 
+    maybeGeolocate();
     maybeUpdate();
   });
 });
