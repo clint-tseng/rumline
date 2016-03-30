@@ -98,9 +98,44 @@ Pebble.addEventListener('ready', function()
   });
 });
 
+
+// CONFIG THINGS
+
+var baseUrl = 'http://to-mark.giantacorn.com/';
 Pebble.addEventListener('showConfiguration', function()
 {
-  var url = 'http://to-mark.giantacorn.com/mark-config';
-  Pebble.openURL(url);
+  var url;
+  var conf = localStorage.getItem('tomark');
+  try { JSON.parse(conf); } catch (_) { conf = null; }
+
+  if (conf == null)
+  {
+    Pebble.openURL(baseUrl);
+  }
+  else
+  {
+    var id = 'p-' + Pebble.getWatchToken();
+
+    var req = new XMLHttpRequest();
+    req.setRequestHeader('Content-Type', 'text/plain');
+    req.open('POST', baseUrl + 'config/' + id);
+    req.send(conf);
+
+    Pebble.openURL(baseUrl + '#' + id);
+  }
+});
+
+Pebble.addEventListener('webviewclosed', function(event)
+{
+  if ((event.response == null) || (event.response == '')) return;
+
+  var req = new XMLHttpRequest();
+  req.onload = function()
+  {
+    localStorage.setItem('tomark', this.responseText);
+    Pebble.showSimpleNotificationOnPebble('To Mark', 'Settings saved!');
+  };
+  req.open('GET', baseUrl + 'config/' + event.response);
+  req.send();
 });
 

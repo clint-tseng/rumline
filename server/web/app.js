@@ -105,18 +105,43 @@ var updateDMS = function(mark, field)
   container.find('.dms-s').val(Math.round(value * 1000) / 1000);
 };
 
+// render elems
+var renderAll = function()
+{
+  for (var i in groups)
+  {
+    newGroup(groups[i]);
+    for (var j in groups[i].marks) newMark(groups[i], groups[i].marks[j]);
+  }
+};
+
 
 // DATA MODEL
 // load data
 var data = { uid: 0, groups: [{ name: "My first folder", marks: [{ id: 0, name: "My first mark" }] }] };
-if (window.location.hash !== '') data = JSON.parse(decodeURIComponent(window.location.hash.slice(1)));
-var groups = data.groups;
+var groups;
 
-// render elems
-for (var i in groups)
+if (window.location.hash !== '')
 {
-  newGroup(groups[i]);
-  for (var j in groups[i].marks) newMark(groups[i], groups[i].marks[j]);
+  $('body').addClass('loading');
+
+  var id = window.location.hash.slice(1);
+  var attemptFetch = function()
+  {
+    $.ajax({ type: 'get', url: '/config/' + id, dataType: 'json', success: function(result)
+    {
+      data = result;
+      groups = data.groups;
+      renderAll();
+      $('body').removeClass('loading');
+    }, error: function() { setTimeout(attemptFetch, 750); } });
+  };
+  attemptFetch(); // poll because holy fuck pebble conf "api' is bad
+}
+else
+{
+  groups = data.groups;
+  renderAll();
 }
 
 // on save
@@ -126,6 +151,7 @@ $('#save').on('click', function()
   window.crypto.getRandomValues(buffer);
   var id = btoa(String.fromCharCode.apply(this, buffer)).replace(/[^a-z0-9]/gi, '-');
 
+  $('body').addClass('loading');
   $.ajax({ type: 'post', url: '/config/' + id, contentType: 'text/plain', data: JSON.stringify(data), success: function()
   {
     window.location = 'pebblejs://close#' + id;

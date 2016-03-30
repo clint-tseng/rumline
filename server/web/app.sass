@@ -1,4 +1,5 @@
 // TOOLS
+
 @mixin prefixer($key, $value)
   #{$key}: #{$value}
   -webkit-#{$key}: #{$value}
@@ -34,6 +35,7 @@ body
 .hide
   display: none !important
 
+
 // LAYOUT
 
 .intro
@@ -47,6 +49,7 @@ body
 
 #main
   padding: 0 1em 4em
+  transition: 0.2s opacity
 
 #toolbar
   background-color: rgba(50, 50, 50, 0.9)
@@ -90,8 +93,52 @@ label
   font-weight: 700
   padding-bottom: 1.5em
 
+@-webkit-keyframes spinspin
+  from
+    -webkit-transform: rotateZ(0deg)
+  to
+    -webkit-transform: rotateZ(-360deg)
+
+#loading
+  $size: 6em
+
+  height: $size
+  left: calc(50% - #{$size / 2})
+  position: fixed
+  top: calc(50% - #{$size / 2})
+  width: $size
+  -webkit-animation-duration: 1.6s
+  -webkit-animation-iteration-count: infinite
+  -webkit-animation-name: spinspin
+  -webkit-animation-timing-function: linear
+
+  #loading-inner
+    $inner-size: 3em
+
+    height: $inner-size
+    position: relative
+    width: $inner-size
+    -webkit-animation-duration: 1s
+    -webkit-animation-iteration-count: infinite
+    -webkit-animation-name: spinspin
+    -webkit-animation-timing-function: linear
+
+    &:before, &:after
+      @include reify
+      background-color: #777
+      border-radius: 9999px
+      height: 1em
+      position: absolute
+      top: 1em
+      width: 1em
+    &:before
+      left: 0
+    &:after
+      right: 0
+
 
 // BLOCKS
+
 .group
   border-bottom: 2px solid #ccc
   margin-bottom: 1em
@@ -131,5 +178,17 @@ label
 
   .delete-mark
     float: right
+
+
+// STATE
+
+#loading
+  display: none
+body.loading
+  #loading
+    display: block
+  #main
+    opacity: 0.4
+    pointer-events: none
 
 

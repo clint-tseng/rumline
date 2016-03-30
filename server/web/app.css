@@ -30,7 +30,8 @@ body {
   padding: 1em; }
 
 #main {
-  padding: 0 1em 4em; }
+  padding: 0 1em 4em;
+  transition: 0.2s opacity; }
 
 #toolbar {
   background-color: rgba(50, 50, 50, 0.9);
@@ -71,6 +72,43 @@ label {
   font-weight: 700;
   padding-bottom: 1.5em; }
 
+@-webkit-keyframes spinspin {
+  from {
+    -webkit-transform: rotateZ(0deg); }
+  to {
+    -webkit-transform: rotateZ(-360deg); } }
+#loading {
+  height: 6em;
+  left: calc(50% - 3em);
+  position: fixed;
+  top: calc(50% - 3em);
+  width: 6em;
+  -webkit-animation-duration: 1.6s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-name: spinspin;
+  -webkit-animation-timing-function: linear; }
+  #loading #loading-inner {
+    height: 3em;
+    position: relative;
+    width: 3em;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: spinspin;
+    -webkit-animation-timing-function: linear; }
+    #loading #loading-inner:before, #loading #loading-inner:after {
+      content: "";
+      display: block;
+      background-color: #777;
+      border-radius: 9999px;
+      height: 1em;
+      position: absolute;
+      top: 1em;
+      width: 1em; }
+    #loading #loading-inner:before {
+      left: 0; }
+    #loading #loading-inner:after {
+      right: 0; }
+
 .group {
   border-bottom: 2px solid #ccc;
   margin-bottom: 1em;
@@ -103,5 +141,14 @@ label {
     width: calc(100% - 3em); }
   .mark .delete-mark {
     float: right; }
+
+#loading {
+  display: none; }
+
+body.loading #loading {
+  display: block; }
+body.loading #main {
+  opacity: 0.4;
+  pointer-events: none; }
 
 /*# sourceMappingURL=app.css.map */

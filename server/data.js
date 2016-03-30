@@ -26,7 +26,7 @@ module.exports = {
              .limit(1)
              .then(function(result)
              {
-               return (result[0] != null) ? result[0].data : {};
+               return (result[0] != null) ? result[0].data : null;
              });
   },
   prune: function()

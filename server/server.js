@@ -10,7 +10,11 @@ var ok = function(res) { res.status(200).type('json').send({ success: true }); }
 
 server.get('/config/:guid', function(req, res)
 {
-  data.get(req.params.guid).then(function(body) { res.status(200).type('json').send(body); });
+  data.get(req.params.guid).then(function(body)
+  {
+    if (body) res.status(200).type('json').send(body);
+    else res.status(404).type('json').send({ success: false });
+  });
 });
 
 server.post('/config/:guid', function(req, res)
