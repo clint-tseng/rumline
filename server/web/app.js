@@ -120,7 +120,21 @@ for (var i in groups)
 }
 
 // on save
-$('#save').on('click', function() { window.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(data)); });
+$('#save').on('click', function()
+{
+  var buffer = new Uint8Array(24);
+  window.crypto.getRandomValues(buffer);
+  var id = btoa(String.fromCharCode.apply(this, buffer)).replace(/[^a-z0-9]/gi, '-');
+
+  $.ajax({ type: 'post', url: '/config/' + id, contentType: 'text/plain', data: JSON.stringify(data), success: function()
+  {
+    window.location = 'pebblejs://close#' + id;
+  },
+  error: function()
+  {
+    // TODO
+  } });
+});
 
 
 // DEBUG

@@ -4,3 +4,4 @@
 build
 .lock-waf*
 .sass-cache/
+node_modules/

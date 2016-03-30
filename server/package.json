@@ -1,0 +1,12 @@
+{
+  "name": "to-mark",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "~4.13.4",
+    "knex": "~0.10.0",
+    "pg": "~4.3.0",
+    "body-parser": "~1.15.0"
+  }
+}
+
