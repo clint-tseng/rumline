@@ -22,5 +22,7 @@ void deserialize_groups(struct list* group_list, void* buffer);
 void group_free_marks(struct group* g);
 void group_destruct(struct group* g);
 
+void groups_destruct(struct list* group_list);
+
 #endif
 

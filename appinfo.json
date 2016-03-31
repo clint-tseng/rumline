@@ -11,14 +11,12 @@
   "appKeys": {
     "bearing": 0,
     "distance": 1,
-    "lat": 2,
-    "lon": 3,
+    "id": 2,
 
-    "cfgStart": 4,
-    "cfgGroup": 5,
-    "cfgMarkId": 6,
-    "cfgMarkName": 7,
-    "cfgEnd": 8
+    "cfgMessage": 3,
+    "cfgGroupName": 4,
+    "cfgMarkId": 5,
+    "cfgMarkName": 6
   },
   "resources": {
     "media": []

@@ -95,3 +95,10 @@ void group_destruct(struct group* g)
   free(g); // again probably bad form.
 }
 
+void groups_destruct(struct list* group_list)
+{
+  int group_count = list_length(group_list);
+  for (int i = 0; i < group_count; i++) group_destruct(list_nth(group_list, i));
+  list_destruct(group_list);
+}
+

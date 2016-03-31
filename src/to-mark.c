@@ -1,6 +1,9 @@
 #include <pebble.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+
+#include "./pbstore.h"
 
 #include "./linked-list.h"
 #include "./mark.h"
@@ -9,100 +12,20 @@
 
 static App* app;
 
-// TESTING
-static void init_test_data()
-{
-  struct list* groups = malloc(sizeof (struct list));
-  list_init(groups);
-
-  struct group* shilshole = malloc(sizeof (struct group));
-  shilshole->name = "Shilsole Bay";
-  list_add(groups, shilshole);
-
-  struct list* marks = malloc(sizeof (struct list));
-  list_init(marks);
-  shilshole->marks = marks;
-
-  struct mark* start = malloc(sizeof (struct mark));
-  start->name = "N - N Hamburger";
-  start->lat = 47.68692;
-  start->lon = -122.41055;
-  list_add(marks, start);
-
-  struct mark* meadow_point = malloc(sizeof (struct mark));
-  meadow_point->name = "M - Meadow Point";
-  meadow_point->lat = 47.69639;
-  meadow_point->lon = -122.40992;
-  list_add(marks, meadow_point);
-
-  struct mark* west_point = malloc(sizeof (struct mark));
-  west_point->name = "W - West Point";
-  west_point->lat = 47.66020;
-  west_point->lon = -122.44150;
-  list_add(marks, west_point);
-
-  struct mark* blinker = malloc(sizeof (struct mark));
-  blinker->name = "E - Ballard Blinker";
-  blinker->lat = 47.67770;
-  blinker->lon = -122.41599;
-  list_add(marks, blinker);
-
-  app = malloc(sizeof (App));
-  app->groups = groups;
-  app->has_fix = false;
-  app->showing_mark = false;
-}
-
-static void destroy_test_data()
-{
-  struct group* g = list_nth(app->groups, 0);
-  group_free_marks(g);
-  group_destruct(g);
-
-  list_destruct(app->groups);
-  free(app);
-}
-
 
 // WIRE FORMAT
+
 typedef enum {
-  dictBearing = 0, dictDistance, dictLat, dictLon,
-  cfgStart, cfgGroup, cfgMarkId, cfgMarkName, cfgEnd
+  dictBearing = 0, dictDistance, dictId,
+  cfgMessage, cfgGroupName, cfgMarkId, cfgMarkName
 } dictKey;
+
+typedef enum {
+  cfgMessage_start = 0, cfgMessage_group, cfgMessage_mark, cfgMessage_end
+} cfgMessages;
 
 
 // MARK TO PHONE
-// ftoa copied from pebble forums.
-// originally written by matthew clark.
-// https://forums.getpebble.com/discussion/8743/petition-please-support-float-double-for-snprintf
-void ftoa (char* str, double val, int precision)
-{
-  if (val < 0)
-  {
-    *(str++) = '-';
-    val = -val;
-  }
-
-  snprintf(str, 12, "%d", (int) val);
-  str += strlen(str);
-  val -= (int) val;
-
-  if ((precision > 0) && (val >= .0000001))
-  {
-    *(str++) = '.';
-    for (int i = 0; i < precision; i++)
-    {
-      if (val > 0)
-      {
-        val *= 10;
-        *(str++) = '0' + (int) (val + ((i == precision - 1) ? .5 : 0));
-        val -= (int) val;
-      }
-      else break;
-    }
-  }
-  *str = '\0';
-}
 
 void send_mark_to_phone(struct mark* m)
 {
@@ -111,14 +34,9 @@ void send_mark_to_phone(struct mark* m)
 
   if (result == APP_MSG_OK)
   {
-    char float_buffer[32];
-    ftoa(float_buffer, m->lat, 7);
-    dict_write_cstring(dict, dictLat, float_buffer);
-
-    ftoa(float_buffer, m->lon, 7);
-    dict_write_cstring(dict, dictLon, float_buffer);
-
+    dict_write_int32(dict, dictId, app->current_mark->id);
     result = app_message_outbox_send();
+    // TODO: do something w/ result
   }
 }
 
@@ -289,6 +207,7 @@ static void show_group_menu(struct group* g)
   window_stack_push(group_window, true);
 }
 
+
 // MAIN MENU
 
 static Window* main_window;
@@ -343,21 +262,101 @@ static void show_main_menu()
 }
 
 
-// LAT/LONG UPDATE HANDLER
+// OVERALL UI
+
+void reload_ui()
+{
+}
+
+
+// MESSAGE HANDLER
+
+static struct list* cfg_groups;
 static void inbox_received_callback(DictionaryIterator* iter, void* context)
 {
-  snprintf(text_bearing, sizeof(text_bearing), "%s°", dict_find(iter, dictBearing)->value->cstring);
-  snprintf(text_distance, sizeof(text_distance), "%s", dict_find(iter, dictDistance)->value->cstring);
-  app->has_fix = true;
+  Tuple* message_type_tuple = dict_find(iter, cfgMessage);
 
-  if (app->showing_mark) update_labels();
+  if (message_type_tuple)
+  {
+    int message_type = message_type_tuple->value->int32;
+    if (message_type == cfgMessage_start)
+    {
+      if (cfg_groups) groups_destruct(cfg_groups);
+      cfg_groups = malloc(sizeof (struct list));
+      list_init(cfg_groups);
+    }
+    else if (message_type == cfgMessage_group)
+    {
+      char* name = dict_find(iter, cfgGroupName)->value->cstring;
+      struct group* g = malloc(sizeof (struct group));
+      group_init(g);
+      char* name_copy = malloc(strlen(name) + 1);
+      strcpy(name_copy, name);
+      g->name = name_copy;
+      list_add(cfg_groups, g);
+    }
+    else if (message_type == cfgMessage_mark)
+    {
+      short id = (short) dict_find(iter, cfgMarkId)->value->int32;
+      char* name = dict_find(iter, cfgMarkName)->value->cstring;
+      struct mark* m = malloc(sizeof (struct mark));
+      m->id = id;
+      char* name_copy = malloc(strlen(name) + 1);
+      strcpy(name_copy, name);
+      m->name = name_copy;
+      list_add(((struct group*) list_last(cfg_groups))->marks, m);
+    }
+    else if (message_type == cfgMessage_end)
+    {
+      size_t bytes = size_groups(cfg_groups);
+      void* save_buffer = malloc(bytes);
+      serialize_groups(cfg_groups, save_buffer);
+      pbstore_set(save_buffer, bytes);
+
+      reload_ui();
+    }
+  }
+  else
+  {
+    snprintf(text_bearing, sizeof(text_bearing), "%s°", dict_find(iter, dictBearing)->value->cstring);
+    snprintf(text_distance, sizeof(text_distance), "%s", dict_find(iter, dictDistance)->value->cstring);
+    app->has_fix = true;
+
+    if (app->showing_mark) update_labels();
+  }
 }
+
+
+// DATA
+
+void load_data()
+{
+  app = malloc(sizeof (struct app));
+
+  app->groups = malloc(sizeof (struct list));
+  list_init(app->groups);
+
+  if (pbstore_exists())
+  {
+    void* buffer = pbstore_get();
+    deserialize_groups(app->groups, buffer);
+    free(buffer);
+  }
+}
+
+void destroy_data()
+{
+  groups_destruct(app->groups);
+  free(app);
+}
+
 
 // APP
 
 static void init(void)
 {
-  init_test_data();
+  load_data();
+
   app_message_open(APP_MESSAGE_INBOX_SIZE_MINIMUM, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
   app_message_register_inbox_received(inbox_received_callback);
   show_main_menu();
@@ -365,7 +364,8 @@ static void init(void)
 
 static void deinit(void)
 {
-  destroy_test_data();
+  destroy_data();
+
   window_destroy(main_window);
   window_destroy(group_window);
   window_destroy(mark_window);

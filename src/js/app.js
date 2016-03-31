@@ -39,11 +39,16 @@ var bearing = function(fromLat, fromLon, toLat, toLon)
 // BUSINESS
 
 var lastLat = 181, lastLon = 181;
-var tgtLat = 181, tgtLon = 181;
+var tgtId = -1;
 
 var maybeUpdate = function()
 {
-  if (lastLat > 180 || lastLon > 180 || tgtLat > 180 || tgtLon > 180) return;
+  if (lastLat > 180 || lastLon > 180 || tgtId < 0) return;
+
+  var mark = findMark(tgtId);
+  if (mark === null) return;
+
+  var tgtLat = mark.lat, tgtLon = mark.lon;
 
   var bear = bearing(lastLat, lastLon, tgtLat, tgtLon);
   var dist = distance(lastLat, lastLon, tgtLat, tgtLon);
@@ -90,8 +95,7 @@ Pebble.addEventListener('ready', function()
   // also start listening for marks from the phone.
   Pebble.addEventListener('appmessage', function(event)
   {
-    tgtLat = parseFloat(event.payload.lat);
-    tgtLon = parseFloat(event.payload.lon);
+    tgtId = parseFloat(event.payload.id);
 
     maybeGeolocate();
     maybeUpdate();
@@ -100,6 +104,9 @@ Pebble.addEventListener('ready', function()
 
 
 // CONFIG THINGS
+
+var currentConf;
+try { currentConf = JSON.parse(localStorage.getItem('tomark')); } catch (_) { currentConf = { groups: [] }; }
 
 var baseUrl = 'http://to-mark.giantacorn.com/';
 Pebble.addEventListener('showConfiguration', function()
@@ -133,9 +140,63 @@ Pebble.addEventListener('webviewclosed', function(event)
   req.onload = function()
   {
     localStorage.setItem('tomark', this.responseText);
-    Pebble.showSimpleNotificationOnPebble('To Mark', 'Settings saved!');
+    currentConf = JSON.parse(this.responseText);
+    sendSettingsToPebble(currentConf, 3, function()
+    {
+      Pebble.showSimpleNotificationOnPebble('To Mark', 'Settings saved!');
+    });
   };
   req.open('GET', baseUrl + 'config/' + event.response);
   req.send();
 });
+
+var cfgMessages = { start: 0, group: 1, mark: 2, end: 3 };
+var sendSettingsToPebble = function(conf, attempts, callback)
+{
+  if (attempts === 0) return Pebble.showSimpleNotificationOnPebble('To Mark', 'Failed to save settings. Check Bluetooth and try again? :(');
+  var fail = function() { sendSettingsToPebble(conf, attempts - 1, callback); };
+
+  // so, this is sort of done serially as a weirdo state machine
+  // because we just have a lot of data to push.
+  // ?? do we need to wait for pebble ready here?
+  Pebble.sendAppMessage({ cfgMessage: cfgMessages.start });
+
+  var i = -1;
+  var sendGroup = function()
+  {
+    i++;
+    if (i >= conf.groups.length)
+    {
+      Pebble.sendAppMessage({ cfgMessage: cfgMessages.end });
+      return callback();
+    }
+
+    var group = conf.groups[i];
+
+    var j = -1;
+    var sendMark = function()
+    {
+      j++;
+      if (j >= group.marks.length) return sendGroup();
+
+      var mark = group.marks[j];
+      Pebble.sendAppMessage({ cfgMessage: cfgMessages.mark, cfgMarkId: mark.id, cfgMarkName: mark.name }, sendMark, fail);
+    };
+
+    Pebble.sendAppMessage({ cfgMessage: cfgMessages.group, cfgGroupName: group.name }, sendMark, fail);
+  };
+  sendGroup();
+};
+
+var findMark = function(id)
+{
+  var groups = currentConf.groups;
+  for (var i = 0; i < groups.length; i++)
+    for (var j = 0; j < groups[i].marks.length; j++)
+    {
+      var mark = groups[i].marks[j];
+      if (mark.id === id) return mark;
+    }
+  return null;
+};
 
