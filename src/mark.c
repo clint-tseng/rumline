@@ -33,6 +33,7 @@ void deserialize_mark(struct mark* it, void* buffer)
   strncpy(it->name, buffer, name_length);
 }
 
+// TODO: list serialization is really duplicative. macro?
 size_t size_marks(struct list* mark_list)
 {
   size_t mark_sizes = 0;
@@ -44,10 +45,11 @@ size_t size_marks(struct list* mark_list)
 
 void serialize_marks(struct list* mark_list, void* buffer)
 {
-  *(short*) buffer = list_length(mark_list);
+  int mark_count = list_length(mark_list);
+
+  *(short*) buffer = mark_count;
   buffer += sizeof (short);
 
-  int mark_count = list_length(mark_list);
   for (int i = 0; i < mark_count; i++)
   {
     struct mark* m = (struct mark*) list_nth(mark_list, i);

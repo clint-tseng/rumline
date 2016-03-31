@@ -41,6 +41,48 @@ void deserialize_group(struct group* g, void* buffer)
   strncpy(g->name, buffer, name_length);
 }
 
+
+// TODO: list serialization is really duplicative. macro?
+size_t size_groups(struct list* group_list)
+{
+  size_t group_sizes = 0;
+  int group_count = list_length(group_list);
+  for (int i = 0; i < group_count; i++) group_sizes += size_group((struct group*) list_nth(group_list, i));
+
+  return (sizeof (short)) + group_sizes;
+}
+
+void serialize_groups(struct list* group_list, void* buffer)
+{
+  int group_count = list_length(group_list);
+
+  *(short*) buffer = group_count;
+  buffer += sizeof (short);
+
+  for (int i = 0; i < group_count; i++)
+  {
+    struct group* g = (struct group*) list_nth(group_list, i);
+    serialize_group(g, buffer);
+    buffer += size_group(g);
+  }
+}
+
+void deserialize_groups(struct list* group_list, void* buffer)
+{
+  int group_count = *(short*) buffer;
+  buffer += sizeof (short);
+
+  for (int i = 0; i < group_count; i++)
+  {
+    struct group* g = malloc(sizeof (struct group));
+    group_init(g);
+    deserialize_group(g, buffer);
+    list_add(group_list, g);
+    buffer += size_group(g);
+  }
+}
+
+
 void group_free_marks(struct group* g)
 {
   int mark_count = list_length(g->marks);
