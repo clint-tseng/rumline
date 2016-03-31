@@ -64,34 +64,34 @@ var maybeUpdate = function()
   });
 };
 
+var geolocated = false;
+var maybeGeolocate = function()
+{
+  if (geolocated === true) return;
+  geolocated = true;
+
+  // start requesting geolocation.
+  // TODO: deal with if the user has denied Pebble GPS.
+  navigator.geolocation.watchPosition(function(position)
+  {
+    if (position.coords.latitude === lastLat && position.coords.longitude === lastLon) return;
+    lastLat = position.coords.latitude;
+    lastLon = position.coords.longitude;
+
+    maybeUpdate();
+  },
+  {
+    enableHighAccuracy: true,
+    maximumAge: 2 * 60 * 1000 // 2 minutes ago is okay
+  });
+};
+
 
 // PEBBLE THINGS
 
 // i guess Pebble just magicks in from somewhere.
 Pebble.addEventListener('ready', function()
 {
-  var geolocated = false;
-  var maybeGeolocate = function()
-  {
-    if (geolocated === true) return;
-    geolocated = true;
-
-    // start requesting geolocation.
-    // TODO: deal with if the user has denied Pebble GPS.
-    navigator.geolocation.watchPosition(function(position)
-    {
-      if (position.coords.latitude === lastLat && position.coords.longitude === lastLon) return;
-      lastLat = position.coords.latitude;
-      lastLon = position.coords.longitude;
-
-      maybeUpdate();
-    },
-    {
-      enableHighAccuracy: true,
-      maximumAge: 2 * 60 * 1000 // 2 minutes ago is okay
-    });
-  };
-
   // also start listening for marks from the phone.
   Pebble.addEventListener('appmessage', function(event)
   {
