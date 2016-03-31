@@ -315,7 +315,7 @@ static void main_window_load(Window* window)
   }
 
   main_menu_section = malloc(sizeof (SimpleMenuSection));
-  main_menu_section->title = "to mark";
+  main_menu_section->title = "Where to?";
   main_menu_section->items = menu_items;
   main_menu_section->num_items = group_count;
 

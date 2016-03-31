@@ -15,7 +15,7 @@ void print_bytes(void* buffer, size_t bytes)
 
 void print_mark(struct mark* m)
 {
-  printf("lat: %f\nlon: %f\nname: %s\n", m->lat, m->lon, m->name);
+  printf("id: %d\nname: %s\n", m->id, m->name);
 }
 
 void print_group(struct group* g)

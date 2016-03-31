@@ -13,13 +13,11 @@ void test_group()
   g->name = "test group";
 
   struct mark x;
-  x.lat = 47;
-  x.lon = -122;
+  x.id = 5;
   x.name = "x mark";
 
   struct mark y;
-  y.lat = 49;
-  y.lon = -121;
+  y.id = 6;
   y.name = "y mark";
 
   list_add(g->marks, &x);

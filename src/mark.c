@@ -6,15 +6,13 @@
 
 size_t size_mark(struct mark* it)
 {
-  return (sizeof it->lat) + (sizeof it->lon) + (sizeof (short)) + strlen(it->name) + 1;
+  return (sizeof it->id) + (sizeof (short)) + strlen(it->name) + 1;
 }
 
 void serialize_mark(struct mark* it, void* buffer)
 {
-  *(double*) buffer = it->lat;
-  buffer += sizeof it->lat;
-  *(double*) buffer = it->lon;
-  buffer += sizeof it->lon;
+  *(short*) buffer = it->id;
+  buffer += sizeof it->id;
 
   size_t name_length = strlen(it->name) + 1;
   *(short*) buffer = name_length;
@@ -25,10 +23,8 @@ void serialize_mark(struct mark* it, void* buffer)
 
 void deserialize_mark(struct mark* it, void* buffer)
 {
-  it->lat = *(double*) buffer;
-  buffer += sizeof it->lat;
-  it->lon = *(double*) buffer;
-  buffer += sizeof it->lon;
+  it->id = *(short*) buffer;
+  buffer += sizeof it->id;
 
   size_t name_length = *(short*) buffer;
   buffer += sizeof (short);
