@@ -1,19 +1,20 @@
 #ifndef __APP
 #define __APP
 
+#include <pebble.h>
+
 #include "./linked-list.h"
 #include "./group.h"
 #include "./mark.h"
 
 struct app
 {
-  struct list* groups;
+  List* groups;
 
-  struct group* current_group;
-  struct mark* current_mark;
+  Group* current_group;
+  Mark* current_mark;
 
-  bool has_fix;
-  bool showing_mark;
+  Window* current_mark_screen;
 };
 typedef struct app App;
 
