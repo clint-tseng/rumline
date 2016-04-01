@@ -9,31 +9,28 @@ void _group_menu_selected(int idx, void* context)
 {
   GroupMenuData* data = (GroupMenuData*) context;
 
-  data->app->current_mark = (Mark*) list_nth(data->app->current_group->marks, idx);
-
   if (data->child) mark_screen_destruct(data->child);
-  data->child = mark_screen_show(data->app);
+  data->child = mark_screen_show(data->app, (Mark*) list_nth(data->group->marks, idx));
 }
 
 void _group_window_load(Window* window)
 {
   GroupMenuData* data = (GroupMenuData*) window_get_user_data(window);
-  App* app = data->app;
 
   Layer* window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  int mark_count = list_length(app->current_group->marks);
+  int mark_count = list_length(data->group->marks);
   SimpleMenuItem* menu_items = calloc(mark_count, sizeof (SimpleMenuItem));
   for (int i = 0; i < mark_count; i++)
   {
-    Mark* m = list_nth(app->current_group->marks, i);
+    Mark* m = list_nth(data->group->marks, i);
     menu_items[i].title = m->name;
     menu_items[i].callback = _group_menu_selected;
   }
 
   SimpleMenuSection* section = malloc(sizeof (SimpleMenuSection));
-  section->title = app->current_group->name;
+  section->title = data->group->name;
   section->items = menu_items;
   section->num_items = mark_count;
 
@@ -53,11 +50,12 @@ void _group_window_unload(Window* window)
   simple_menu_layer_destroy(data->menu);
 }
 
-GroupMenu* group_menu_show(App* app)
+GroupMenu* group_menu_show(App* app, Group* g)
 {
   Window* w = window_create();
 
   GroupMenuData* data = malloc(sizeof (GroupMenuData));
+  data->group = g;
   data->child = NULL;
   window_set_user_data(w, data);
 

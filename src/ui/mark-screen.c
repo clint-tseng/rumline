@@ -34,7 +34,7 @@ void _draw_static_labels(Window* w)
   text_layer_set_text_color(data->name, GColorChromeYellow);
   text_layer_set_font(data->name, fonts_get_system_font(FONT_KEY_GOTHIC_14));
   text_layer_set_text_alignment(data->name, GTextAlignmentCenter);
-  text_layer_set_text(data->name, data->app->current_mark->name);
+  text_layer_set_text(data->name, data->mark->name);
   layer_add_child(window_layer, text_layer_get_layer(data->name));
 
   data->bearing_value = text_layer_create(GRect(0, 23, bounds.size.w, 84));
@@ -80,14 +80,14 @@ void _mark_window_unload(Window* w)
   data->app->current_mark_screen = NULL;
 }
 
-MarkScreen* mark_screen_show(App* app)
+MarkScreen* mark_screen_show(App* app, Mark* m)
 {
   Window* w = window_create();
 
   MarkScreenData* data = malloc(sizeof (MarkScreenData));
-  window_set_user_data(w, data);
-
   data->app = app;
+  data->mark = m;
+  window_set_user_data(w, data);
 
   window_set_window_handlers(w, (WindowHandlers)
   {
@@ -96,7 +96,7 @@ MarkScreen* mark_screen_show(App* app)
   });
   window_stack_push(w, true);
 
-  send_mark_to_phone(app->current_mark);
+  send_mark_to_phone(data->mark);
   return w;
 }
 

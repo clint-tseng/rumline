@@ -10,10 +10,6 @@
 struct app
 {
   List* groups;
-
-  Group* current_group;
-  Mark* current_mark;
-
   Window* current_mark_screen;
 };
 typedef struct app App;

@@ -9,10 +9,8 @@ void _main_menu_selected(int idx, void* context)
 {
   MainMenuData* data = (MainMenuData*) context;
 
-  data->app->current_group = (Group*) list_nth(data->app->groups, idx);
-
   if (data->child) group_menu_destruct(data->child);
-  data->child = group_menu_show(data->app);
+  data->child = group_menu_show(data->app, (Group*) list_nth(data->app->groups, idx));
 }
 
 void _main_window_load(Window* window)
