@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "../src/linked-list.h"
 
-void print_string_list(struct list* l)
+void print_string_list(List* l)
 {
   int size = list_length(l);
   for (int i = 0; i < size; i++) printf("%s ", (char*) list_nth(l, i));
@@ -14,8 +14,7 @@ void test_linked_list()
   char* y = "yankee";
   char* z = "zebra";
 
-  struct list* l = malloc(sizeof (struct list));
-  list_init(l);
+  List* l = list_create();
 
   printf("initial list size: %d (expects 0)\n\n", list_length(l));
 

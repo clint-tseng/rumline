@@ -1,6 +1,8 @@
 #ifndef __TEST_UTIL
 #define __TEST_UTIL
 
+#include <string.h>
+
 #include "../src/mark.h"
 #include "../src/group.h"
 
@@ -29,6 +31,13 @@ void print_group(struct group* g)
     printf("\n%d:\n", i);
     print_mark(list_nth(g->marks, i));
   }
+}
+
+char* heap_string(char* s)
+{
+  char* hs = malloc(strlen(s) + 1);
+  strcpy(hs, s);
+  return hs;
 }
 
 #endif

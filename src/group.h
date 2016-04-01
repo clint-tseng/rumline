@@ -8,21 +8,20 @@ struct group
   char* name;
   struct list* marks;
 };
+typedef struct group Group;
 
-void group_init(struct group* g);
+Group* group_create();
 
-size_t size_group(struct group* g);
-void serialize_group(struct group* g, void* buffer);
-void deserialize_group(struct group* g, void* buffer);
+size_t size_group(Group* g);
+void serialize_group(Group* g, void* buffer);
+void deserialize_group(Group* g, void* buffer);
 
-size_t size_groups(struct list* group_list);
-void serialize_groups(struct list* group_list, void* buffer);
-void deserialize_groups(struct list* group_list, void* buffer);
+size_t size_groups(List* group_list);
+void serialize_groups(List* group_list, void* buffer);
+void deserialize_groups(List* group_list, void* buffer);
 
-void group_free_marks(struct group* g);
-void group_destruct(struct group* g);
-
-void groups_destruct(struct list* group_list);
+void group_destruct(Group* g);
+void groups_destruct(List* group_list);
 
 #endif
 

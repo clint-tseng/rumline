@@ -7,13 +7,13 @@
 
 void test_mark()
 {
-  struct mark from;
+  Mark from;
   from.id = 1;
-  from.name = "from mark";
+  from.name = heap_string("from mark");
 
-  struct mark to;
+  Mark to;
   to.id = 2;
-  to.name = "to mark";
+  to.name = heap_string("to mark");
 
   size_t bytes = size_mark(&from);
   printf("bytes: %d (expects 14)\n", (int) bytes);
@@ -26,7 +26,7 @@ void test_mark()
 
   printf("\n\n");
 
-  struct mark after;
+  Mark after;
   deserialize_mark(&after, buffer);
   printf("reinflated:\n");
   print_mark(&after);
@@ -35,16 +35,15 @@ void test_mark()
 
 void test_marks()
 {
-  struct mark x;
+  Mark x;
   x.id = 3;
-  x.name = "x mark";
+  x.name = heap_string("x mark");
 
-  struct mark y;
+  Mark y;
   y.id = 4;
-  y.name = "y mark";
+  y.name = heap_string("y mark");
 
-  struct list* l = malloc(sizeof (struct list));
-  list_init(l);
+  List* l = list_create();
   list_add(l, &x);
   list_add(l, &y);
 
@@ -57,15 +56,14 @@ void test_marks()
   printf("serialized:\n");
   print_bytes(buffer, bytes);
 
-  struct list* l2 = malloc(sizeof (struct list));
-  list_init(l2);
+  List* l2 = list_create();
   deserialize_marks(l2, buffer);
 
   printf("\n\ndeserialized marks: %d (expects 2)\n", list_length(l2));
   printf("first inflated mark:\n");
-  print_mark((struct mark*) list_nth(l2, 0));
+  print_mark((Mark*) list_nth(l2, 0));
   printf("\nsecond inflated mark:\n");
-  print_mark((struct mark*) list_nth(l2, 1));
+  print_mark((Mark*) list_nth(l2, 1));
   printf("\n");
 }
 

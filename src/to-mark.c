@@ -27,7 +27,7 @@ typedef enum {
 
 // MARK TO PHONE
 
-void send_mark_to_phone(struct mark* m)
+void send_mark_to_phone(Mark* m)
 {
   DictionaryIterator* dict;
   AppMessageResult result = app_message_outbox_begin(&dict);
@@ -135,7 +135,7 @@ static void mark_window_unload(Window* window)
   app->showing_mark = false;
 }
 
-static void show_mark(struct mark* m)
+static void show_mark(Mark* m)
 {
   app->current_mark = m;
 
@@ -172,7 +172,7 @@ static void group_window_load(Window* window)
   SimpleMenuItem* menu_items = calloc(mark_count, sizeof (SimpleMenuItem));
   for (int i = 0; i < mark_count; i++)
   {
-    struct mark* m = list_nth(app->current_group->marks, i);
+    Mark* m = list_nth(app->current_group->marks, i);
     menu_items[i].title = m->name;
     menu_items[i].callback = group_menu_selected;
   }
@@ -193,7 +193,7 @@ static void group_window_unload(Window* window)
   simple_menu_layer_destroy(group_menu);
 }
 
-static void show_group_menu(struct group* g)
+static void show_group_menu(Group* g)
 {
   app->current_group = g;
 
@@ -228,7 +228,7 @@ static void main_window_load(Window* window)
   SimpleMenuItem* menu_items = calloc(group_count, sizeof (SimpleMenuItem));
   for (int i = 0; i < group_count; i++)
   {
-    struct group* g = list_nth(app->groups, i);
+    Group* g = list_nth(app->groups, i);
     menu_items[i].title = g->name;
     menu_items[i].callback = main_menu_selected;
   }
@@ -271,7 +271,7 @@ void reload_ui()
 
 // MESSAGE HANDLER
 
-static struct list* cfg_groups;
+static List* cfg_groups;
 static void inbox_received_callback(DictionaryIterator* iter, void* context)
 {
   Tuple* message_type_tuple = dict_find(iter, cfgMessage);
@@ -282,14 +282,12 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
     if (message_type == cfgMessage_start)
     {
       if (cfg_groups) groups_destruct(cfg_groups);
-      cfg_groups = malloc(sizeof (struct list));
-      list_init(cfg_groups);
+      cfg_groups = list_create();
     }
     else if (message_type == cfgMessage_group)
     {
       char* name = dict_find(iter, cfgGroupName)->value->cstring;
-      struct group* g = malloc(sizeof (struct group));
-      group_init(g);
+      Group* g = group_create();
       char* name_copy = malloc(strlen(name) + 1);
       strcpy(name_copy, name);
       g->name = name_copy;
@@ -299,12 +297,12 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
     {
       short id = (short) dict_find(iter, cfgMarkId)->value->int32;
       char* name = dict_find(iter, cfgMarkName)->value->cstring;
-      struct mark* m = malloc(sizeof (struct mark));
+      Mark* m = mark_create();
       m->id = id;
       char* name_copy = malloc(strlen(name) + 1);
       strcpy(name_copy, name);
       m->name = name_copy;
-      list_add(((struct group*) list_last(cfg_groups))->marks, m);
+      list_add(((Group*) list_last(cfg_groups))->marks, m);
     }
     else if (message_type == cfgMessage_end)
     {
@@ -332,9 +330,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 void load_data()
 {
   app = malloc(sizeof (struct app));
-
-  app->groups = malloc(sizeof (struct list));
-  list_init(app->groups);
+  app->groups = list_create();
 
   if (pbstore_exists())
   {

@@ -7,21 +7,19 @@
 
 void test_group()
 {
-  struct group* g = malloc(sizeof (struct group));
-  group_init(g);
+  Group* g = group_create();
+  g->name = heap_string("test group");
 
-  g->name = "test group";
+  Mark* x = mark_create();
+  x->id = 5;
+  x->name = heap_string("x mark");
 
-  struct mark x;
-  x.id = 5;
-  x.name = "x mark";
+  Mark* y = mark_create();
+  y->id = 6;
+  y->name = heap_string("y mark");
 
-  struct mark y;
-  y.id = 6;
-  y.name = "y mark";
-
-  list_add(g->marks, &x);
-  list_add(g->marks, &y);
+  list_add(g->marks, x);
+  list_add(g->marks, y);
 
   size_t bytes = size_group(g);
   void* buffer = malloc(bytes);
@@ -31,15 +29,13 @@ void test_group()
   printf("serialized group:\n");
   print_bytes(buffer, bytes);
 
-  struct group* g2 = malloc(sizeof (struct group));
-  group_init(g2);
+  Group* g2 = group_create();
   deserialize_group(g2, buffer);
 
   printf("\n\ninflated group:\n");
   print_group(g2);
 
-  struct list* l = malloc(sizeof (struct list));
-  list_init(l);
+  List* l = list_create();
   list_add(l, g);
   list_add(l, g2);
 
@@ -51,9 +47,7 @@ void test_group()
   printf("\nserialized group:\n");
   print_bytes(b2, groups_size);
 
-  struct list* l2 = malloc(sizeof (struct list));
-  list_init(l2);
-
+  List* l2 = list_create();
   deserialize_groups(l2, b2);
   printf("\n\ninflated group count: %d (expects 2)\n", list_length(l2));
 
