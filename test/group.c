@@ -1,9 +1,9 @@
 #include <stdlib.h>
 
 #include "util.h"
-#include "../src/linked-list.h"
-#include "../src/mark.h"
-#include "../src/group.h"
+#include "../src/data/linked-list.h"
+#include "../src/data/mark.h"
+#include "../src/data/group.h"
 
 void test_group()
 {

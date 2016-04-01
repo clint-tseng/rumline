@@ -4,7 +4,7 @@ test: $(LIB_FILES)
 	gcc -o target/test $(LIB_FILES) test/all.c
 	./target/test
 
-target/%.o: src/%.c
+target/%.o: src/data/%.c
 	gcc -c -o $@ $<
 
 clean:

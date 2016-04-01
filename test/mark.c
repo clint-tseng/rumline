@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 #include "util.h"
-#include "../src/mark.h"
-#include "../src/linked-list.h"
+#include "../src/data/mark.h"
+#include "../src/data/linked-list.h"
 
 void test_mark()
 {

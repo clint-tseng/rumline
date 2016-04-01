@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../src/linked-list.h"
+#include "../src/data/linked-list.h"
 
 void print_string_list(List* l)
 {

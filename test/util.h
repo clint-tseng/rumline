@@ -3,8 +3,8 @@
 
 #include <string.h>
 
-#include "../src/mark.h"
-#include "../src/group.h"
+#include "../src/data/mark.h"
+#include "../src/data/group.h"
 
 void print_bytes(void* buffer, size_t bytes)
 {
