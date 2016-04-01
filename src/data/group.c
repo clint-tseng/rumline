@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./group.h"
-#include "./mark.h"
+#include "group.h"
+#include "mark.h"
 
 Group* group_create()
 {

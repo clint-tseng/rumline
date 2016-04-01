@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "../app.h"
-#include "../pbcomm.h"
+#include "../pb/pbcomm.h"
 
 #include "mark-screen.h"
 

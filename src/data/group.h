@@ -1,7 +1,7 @@
 #ifndef __GROUP
 #define __GROUP
 
-#include "./linked-list.h"
+#include "linked-list.h"
 
 struct group
 {

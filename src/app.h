@@ -3,9 +3,9 @@
 
 #include <pebble.h>
 
-#include "./linked-list.h"
-#include "./group.h"
-#include "./mark.h"
+#include "data/linked-list.h"
+#include "data/group.h"
+#include "data/mark.h"
 
 struct app
 {

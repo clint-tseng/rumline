@@ -2,7 +2,7 @@
 #define __MARK_SCREEN
 
 #include "../app.h"
-#include "../mark.h"
+#include "../data/mark.h"
 
 struct markscreendata
 {

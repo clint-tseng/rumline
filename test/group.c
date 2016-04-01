@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "./util.h"
+#include "util.h"
 #include "../src/linked-list.h"
 #include "../src/mark.h"
 #include "../src/group.h"

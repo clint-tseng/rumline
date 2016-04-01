@@ -1,7 +1,7 @@
 #ifndef __MARK
 #define __MARK
 
-#include "./linked-list.h"
+#include "linked-list.h"
 
 struct mark
 {

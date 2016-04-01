@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./mark.h"
-#include "./linked-list.h"
+#include "mark.h"
+#include "linked-list.h"
 
 Mark* mark_create()
 {

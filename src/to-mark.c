@@ -3,17 +3,17 @@
 #include <math.h>
 #include <string.h>
 
-#include "./pbstore.h"
-#include "./pbcomm.h"
+#include "pb/pbstore.h"
+#include "pb/pbcomm.h"
 
-#include "./linked-list.h"
-#include "./mark.h"
-#include "./group.h"
-#include "./app.h"
+#include "data/linked-list.h"
+#include "data/mark.h"
+#include "data/group.h"
 
 #include "ui/main-menu.h"
 #include "ui/mark-screen.h"
 
+#include "app.h"
 
 // STATE
 static App* app;

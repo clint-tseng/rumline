@@ -1,7 +1,7 @@
 #ifndef __PBCOMM
 #define __PBCOMM
 
-#include "mark.h"
+#include "data/mark.h"
 
 typedef enum {
   dictBearing = 0, dictDistance, dictId,

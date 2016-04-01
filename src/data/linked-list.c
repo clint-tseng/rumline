@@ -1,6 +1,6 @@
 // cheapo linked list impl.
 #include <stdlib.h>
-#include "./linked-list.h"
+#include "linked-list.h"
 
 List* list_create()
 {

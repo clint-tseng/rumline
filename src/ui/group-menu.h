@@ -4,7 +4,7 @@
 #include <pebble.h>
 
 #include "../app.h"
-#include "../group.h"
+#include "../data/group.h"
 #include "mark-screen.h"
 
 struct groupmenudata
