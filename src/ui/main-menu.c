@@ -28,6 +28,11 @@ void _main_window_load(Window* window)
     Group* g = list_nth(app->groups, i);
     menu_items[i].title = g->name;
     menu_items[i].callback = _main_menu_selected;
+
+    char* subtitle = calloc(9, sizeof (char));
+    int mark_count = list_length(g->marks);
+    snprintf(subtitle, 9, "%d mark%c", mark_count, (mark_count == 1) ? ' ' : 's');
+    menu_items[i].subtitle = subtitle;
   }
 
   SimpleMenuSection* section = malloc(sizeof (SimpleMenuSection));
@@ -45,6 +50,10 @@ void _main_window_load(Window* window)
 void _main_window_unload(Window* window)
 {
   MainMenuData* data = (MainMenuData*) window_get_user_data(window);
+
+  for (int i = 0; i < list_length(data->app->groups); i++)
+    free((char*) data->menu_section->items[i].subtitle);
+
   free((SimpleMenuItem*) data->menu_section->items);
   free(data->menu_section);
   simple_menu_layer_destroy(data->menu);
