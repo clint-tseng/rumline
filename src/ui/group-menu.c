@@ -46,8 +46,13 @@ void _group_window_unload(Window* window)
   GroupMenuData* data = (GroupMenuData*) window_get_user_data(window);
   free((SimpleMenuItem*) data->menu_section->items);
   free(data->menu_section);
-  mark_screen_destruct(data->child);
   simple_menu_layer_destroy(data->menu);
+
+  if (data->child)
+  {
+    mark_screen_destruct(data->child);
+    data->child = NULL;
+  }
 }
 
 GroupMenu* group_menu_show(App* app, Group* g)

@@ -47,8 +47,13 @@ void _main_window_unload(Window* window)
   MainMenuData* data = (MainMenuData*) window_get_user_data(window);
   free((SimpleMenuItem*) data->menu_section->items);
   free(data->menu_section);
-  group_menu_destruct(data->child);
   simple_menu_layer_destroy(data->menu);
+
+  if (data->child)
+  {
+    group_menu_destruct(data->child);
+    data->child = NULL;
+  }
 }
 
 MainMenu* main_menu_show(App* app)
