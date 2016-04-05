@@ -55,7 +55,7 @@ button {
   outline: none;
   padding: 0.7em; }
 
-input[type="text"] {
+input[type="text"], input[type="number"] {
   background: #e4e4e4;
   border: none;
     border-bottom: 2px solid #1ed457;

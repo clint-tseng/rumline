@@ -9,8 +9,8 @@ var remove = function(array, elem)
 
 // UI
 // general
-$(document).on('focus', 'input[type=text]', function() { $('body').addClass('editing'); });
-$(document).on('blur', 'input[type=text]', function() { $('body').removeClass('editing'); });
+$(document).on('focus', 'input[type=text], input[type=number]', function() { $('body').addClass('editing'); });
+$(document).on('blur', 'input[type=text], input[type=number]', function() { $('body').removeClass('editing'); });
 
 // groups
 var newGroup = function(group)
