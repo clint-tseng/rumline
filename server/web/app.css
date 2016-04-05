@@ -142,6 +142,9 @@ label {
   .mark .delete-mark {
     float: right; }
 
+body.editing #toolbar {
+  display: none; }
+
 #loading {
   display: none; }
 
