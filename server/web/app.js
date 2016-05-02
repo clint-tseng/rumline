@@ -74,7 +74,8 @@ $(document).on('input', '.mark input', function()
     var d = parseFloat(line.find('.dms-d').val()) || 0;
     var m = parseFloat(line.find('.dms-m').val()) || 0;
     var s = parseFloat(line.find('.dms-s').val()) || 0;
-    var result = d + (m / 60) + (s / 3600);
+    var sign = Math.sign(d);
+    var result = d + (m / 60 * sign) + (s / 3600 * sign);
 
     mark[latLon] = result;
     input.closest('.mark').find('.mark-' + latLon).val(result);
@@ -100,13 +101,13 @@ var updateDMS = function(mark, field)
   var container = markElem.find('.dms-' + field);
 
   var value = mark[field] || 0;
-  container.find('.dms-d').val(Math.floor(value));
+  container.find('.dms-d').val(Math.trunc(value));
 
-  value = (value - Math.floor(value)) * 60;
-  container.find('.dms-m').val(Math.floor(value));
+  value = (value - Math.trunc(value)) * 60;
+  container.find('.dms-m').val(Math.abs(Math.trunc(value)));
 
-  value = (value - Math.floor(value)) * 60;
-  container.find('.dms-s').val(Math.round(value * 1000) / 1000);
+  value = (value - Math.trunc(value)) * 60;
+  container.find('.dms-s').val(Math.abs(Math.round(value * 1000) / 1000));
 };
 
 // render elems
