@@ -30,3 +30,18 @@ void* pbstore_get()
   return buffer;
 };
 
+bool recents_exists() { return persist_exists(100000); }
+
+void recents_set(int* ids)
+{
+  persist_write_int(100000, (int) sizeof(*ids));
+  persist_write_data(100001, ids, sizeof(*ids));
+};
+
+int* recents_get()
+{
+  size_t bytes = (size_t) persist_read_int(100000);
+  int* buffer = malloc(bytes);
+  persist_read_data(100001, buffer, bytes);
+};
+
