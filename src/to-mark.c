@@ -95,11 +95,18 @@ void load_data(App* app)
     deserialize_groups(app->groups, buffer);
     free(buffer);
   }
+  if (pbstore_exists(RECENTS_OFFSET))
+  {
+    void* buffer = pbstore_get(RECENTS_OFFSET);
+    deserialize_group(app->recents, buffer);
+    free(buffer);
+  }
 }
 
 void destroy_data(App* app)
 {
   groups_destruct(app->groups);
+  group_destruct(app->recents);
   free(app);
 }
 
@@ -110,6 +117,8 @@ static void init(void)
 {
   app = malloc(sizeof (struct app));
   app->groups = list_create();
+  app->recents = group_create();
+  app->recents->name = "Recently Opened";
   load_data(app);
 
   app_message_open(APP_MESSAGE_INBOX_SIZE_MINIMUM, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);

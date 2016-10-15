@@ -96,6 +96,13 @@ MarkScreen* mark_screen_show(App* app, Mark* m)
   });
   window_stack_push(w, true);
 
+  group_push_recent(app->recents, m);
+  size_t group_size = size_group(app->recents);
+  void* buffer = malloc(group_size);
+  serialize_group(app->recents, buffer);
+  pbstore_set(buffer, group_size, RECENTS_OFFSET);
+  free(buffer);
+
   send_mark_to_phone(data->mark);
   return w;
 }

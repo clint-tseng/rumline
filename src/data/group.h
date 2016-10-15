@@ -23,5 +23,7 @@ void deserialize_groups(List* group_list, void* buffer);
 void group_destruct(Group* g);
 void groups_destruct(List* group_list);
 
+void group_push_recent(Group* g, Mark* m);
+
 #endif
 

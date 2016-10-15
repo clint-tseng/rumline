@@ -10,7 +10,10 @@ void _main_menu_selected(int idx, void* context)
   MainMenuData* data = (MainMenuData*) context;
 
   if (data->child) group_menu_destruct(data->child);
-  data->child = group_menu_show(data->app, (Group*) list_nth(data->app->groups, idx));
+  if (idx == 0)
+    data->child = group_menu_show(data->app, data->app->recents);
+  else
+    data->child = group_menu_show(data->app, (Group*) list_nth(data->app->groups, idx - 1));
 }
 
 void _main_window_load(Window* window)
@@ -21,11 +24,15 @@ void _main_window_load(Window* window)
   Layer* window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  int group_count = list_length(app->groups);
+  int group_count = list_length(app->groups) + 1;
   SimpleMenuItem* menu_items = calloc(group_count, sizeof (SimpleMenuItem));
   for (int i = 0; i < group_count; i++)
   {
-    Group* g = list_nth(app->groups, i);
+    Group* g;
+    if (i == 0)
+      g = app->recents;
+    else
+      g = list_nth(app->groups, i - 1);
     menu_items[i].title = g->name;
     menu_items[i].callback = _main_menu_selected;
 
