@@ -23,16 +23,24 @@ void _main_window_load(Window* window)
 
   int group_count = list_length(app->groups);
   SimpleMenuItem* menu_items = calloc(group_count, sizeof (SimpleMenuItem));
-  for (int i = 0; i < group_count; i++)
+  for (int i = -1; i < group_count; i++)
   {
-    Group* g = list_nth(app->groups, i);
+    Group* g;
+    if (i == -1)
+      g = app->recents;
+    else
+      g = list_nth(app->groups, i);
+
     menu_items[i].title = g->name;
     menu_items[i].callback = _main_menu_selected;
 
-    char* subtitle = calloc(9, sizeof (char));
-    int mark_count = list_length(g->marks);
-    snprintf(subtitle, 9, "%d mark%c", mark_count, (mark_count == 1) ? ' ' : 's');
-    menu_items[i].subtitle = subtitle;
+    if (i >= 0)
+    {
+      char* subtitle = calloc(9, sizeof (char));
+      int mark_count = list_length(g->marks);
+      snprintf(subtitle, 9, "%d mark%c", mark_count, (mark_count == 1) ? ' ' : 's');
+      menu_items[i].subtitle = subtitle;
+    }
   }
 
   SimpleMenuSection* section = malloc(sizeof (SimpleMenuSection));

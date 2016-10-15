@@ -6,8 +6,8 @@ void pbstore_set(void* buffer, size_t bytes);
 void* pbstore_get();
 
 bool recents_exists();
-void recents_set(int* ids, size_t bytes);
-int* recents_get();
+void recents_set(short* ids, size_t bytes);
+short* recents_get();
 
 #endif
 

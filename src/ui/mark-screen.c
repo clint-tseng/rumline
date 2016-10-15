@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "../app.h"
+#include "../pb/pbstore.h"
 #include "../pb/pbcomm.h"
 
 #include "mark-screen.h"
@@ -95,6 +96,11 @@ MarkScreen* mark_screen_show(App* app, Mark* m)
     .unload = _mark_window_unload
   });
   window_stack_push(w, true);
+
+  recents_push(app->recents, m->id);
+  short* ids = recents_flatten(app->recents);
+  recents_set(ids);
+  free(ids);
 
   send_mark_to_phone(data->mark);
   return w;

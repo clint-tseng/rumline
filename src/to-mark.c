@@ -24,6 +24,14 @@ static MainMenu* main_menu;
 
 void reload_ui()
 {
+  window_stack_pop_all(true);
+  destroy_data(app);
+
+  app = malloc(sizeof (struct app));
+  app->groups = list_create();
+  load_data(app);
+
+  main_menu = main_menu_show(app);
 }
 
 
@@ -95,11 +103,23 @@ void load_data(App* app)
     deserialize_groups(app->groups, buffer);
     free(buffer);
   }
+
+  if (recents_exists())
+  {
+    short* ids = recents_get();
+    app->recents = recents_inflate(ids);
+    free(ids);
+  }
+  else
+  {
+    app->recents = (Recents*) list_create();
+  }
 }
 
 void destroy_data(App* app)
 {
   groups_destruct(app->groups);
+  list_destruct(app->recents);
   free(app);
 }
 
