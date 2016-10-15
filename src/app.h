@@ -7,6 +7,10 @@
 #include "data/group.h"
 #include "data/mark.h"
 
+// K
+const size_t MAIN_OFFSET = 0;
+
+// data structures
 struct app
 {
   List* groups;

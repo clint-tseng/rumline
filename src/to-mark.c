@@ -68,7 +68,7 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
       size_t bytes = size_groups(cfg_groups);
       void* save_buffer = malloc(bytes);
       serialize_groups(cfg_groups, save_buffer);
-      pbstore_set(save_buffer, bytes);
+      pbstore_set(save_buffer, bytes, MAIN_OFFSET);
 
       reload_ui();
     }
@@ -89,9 +89,9 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
 
 void load_data(App* app)
 {
-  if (pbstore_exists())
+  if (pbstore_exists(MAIN_OFFSET))
   {
-    void* buffer = pbstore_get();
+    void* buffer = pbstore_get(MAIN_OFFSET);
     deserialize_groups(app->groups, buffer);
     free(buffer);
   }
