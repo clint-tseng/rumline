@@ -114,7 +114,7 @@ void group_push_recent(Group* g, Mark* m)
 
   ListItem* new = malloc(sizeof (ListItem));
   new->next = g->marks->head;
-  new->data = (void*) id;
+  new->data = m;
   g->marks->head = new;
 }
 
