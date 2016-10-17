@@ -2,6 +2,7 @@
 #define __GROUP
 
 #include "linked-list.h"
+#include "mark.h"
 
 struct group
 {

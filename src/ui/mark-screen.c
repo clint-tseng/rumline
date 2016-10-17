@@ -3,6 +3,7 @@
 
 #include "../app.h"
 #include "../pb/pbcomm.h"
+#include "../pb/pbstore.h"
 
 #include "mark-screen.h"
 
