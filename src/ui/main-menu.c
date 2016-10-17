@@ -36,10 +36,13 @@ void _main_window_load(Window* window)
     menu_items[i].title = g->name;
     menu_items[i].callback = _main_menu_selected;
 
-    char* subtitle = calloc(9, sizeof (char));
-    int mark_count = list_length(g->marks);
-    snprintf(subtitle, 9, "%d mark%c", mark_count, (mark_count == 1) ? ' ' : 's');
-    menu_items[i].subtitle = subtitle;
+    if (i > 0)
+    {
+      char* subtitle = calloc(9, sizeof (char));
+      int mark_count = list_length(g->marks);
+      snprintf(subtitle, 9, "%d mark%c", mark_count, (mark_count == 1) ? ' ' : 's');
+      menu_items[i].subtitle = subtitle;
+    }
   }
 
   SimpleMenuSection* section = malloc(sizeof (SimpleMenuSection));
