@@ -103,7 +103,7 @@ void group_push_recent(Group* g, Mark* m)
   {
     ListItem* cur = g->marks->head;
     int idx = 0;
-    while (cur->next)
+    while (cur)
     {
       if (cur->data == m) break;
       cur = cur->next;
