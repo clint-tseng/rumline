@@ -96,7 +96,6 @@ void groups_destruct(List* group_list)
 }
 
 // not really the best place for this? otoh it does directly manipulate list internals.
-// TODO: clone and free marks.
 void group_push_recent(Group* g, Mark* m)
 {
   if (g->marks->head)
@@ -105,20 +104,25 @@ void group_push_recent(Group* g, Mark* m)
     int idx = 0;
     while (cur)
     {
-      if (cur->data == m) break;
+      if (((Mark*) cur->data)->id == m->id) break;
       cur = cur->next;
       idx++;
     }
 
-    if (cur)
-      list_remove(g->marks, idx);
-    else if (idx > 6)
-      list_remove(g->marks, 6);
+    if (cur || (idx > 6))
+    {
+      idx = (idx > 6) ? 6 : idx;
+      mark_destruct((Mark*) ((ListItem*) list_nth(g->marks, idx))->data);
+      list_remove(g->marks, idx); // list item is automatically freed.
+    }
   }
+
+  Mark* n = malloc(sizeof (Mark));
+  n = m;
 
   ListItem* new = malloc(sizeof (ListItem));
   new->next = g->marks->head;
-  new->data = m;
+  new->data = n;
   g->marks->head = new;
 }
 
