@@ -1,4 +1,4 @@
-# to mark
+# rumline
 
 ## building the client
 
@@ -21,6 +21,22 @@ No migrations are provided because it's so dead simple.
     \c tomark
     create table configs (guid varchar(40), data text, at timestamp);
     alter table configs owner to tomark;
+
+## faq
+
+**Q:** why "rumline"?
+
+**A:** well, a rhumb line is a constant bearing line on a spherical surface to a destination -- the shortest line there.
+
+**Q:** but, isn't "rum" a misspelling then?
+
+**A:** you must not be a sailor.
+
+**Q:** that's not an answer.
+
+**A:** and that's not a question.
+
+**Q:** …
 
 ## license
 
