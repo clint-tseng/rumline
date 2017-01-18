@@ -98,12 +98,14 @@ void groups_destruct(List* group_list)
 // not really the best place for this? otoh it does directly manipulate list internals.
 void group_push_recent(Group* g, Mark* m)
 {
+  short extant = 0;
   if (g->marks->head)
   {
-    ListItem* cur = g->marks->head;
     int idx = 0;
+    ListItem* cur = g->marks->head;
     while (cur)
     {
+      if (((Mark*) cur->data) == m) extant = 1;
       if (((Mark*) cur->data)->id == m->id) break;
       cur = cur->next;
       idx++;
@@ -112,13 +114,21 @@ void group_push_recent(Group* g, Mark* m)
     if (cur || (idx > 6))
     {
       idx = (idx > 6) ? 6 : idx;
-      mark_destruct((Mark*) ((ListItem*) list_nth(g->marks, idx))->data);
+      if (!extant) mark_destruct(list_nth(g->marks, idx));
       list_remove(g->marks, idx); // list item is automatically freed.
     }
   }
 
-  Mark* n = malloc(sizeof (Mark));
-  n = m;
+  Mark* n;
+  if (extant)
+    n = m;
+  else
+  {
+    n = malloc(sizeof (Mark));
+    n->id = m->id;
+    n->name = malloc(strlen(m->name) + 1);
+    strcpy(n->name, m->name);
+  }
 
   ListItem* new = malloc(sizeof (ListItem));
   new->next = g->marks->head;

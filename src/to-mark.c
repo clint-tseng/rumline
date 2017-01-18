@@ -69,6 +69,15 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
       void* save_buffer = malloc(bytes);
       serialize_groups(cfg_groups, save_buffer);
       pbstore_set(save_buffer, bytes, MAIN_OFFSET);
+      free(save_buffer);
+
+      // clear out recents menu in case we now point at dead entries.
+      while (list_nth(app->recents->marks, 0)) { list_remove(app->recents->marks, 0); }
+      bytes = size_group(app->recents);
+      save_buffer = malloc(bytes);
+      serialize_group(app->recents, save_buffer);
+      pbstore_set(save_buffer, bytes, RECENTS_OFFSET);
+      free(save_buffer);
 
       reload_ui();
     }
