@@ -24,6 +24,15 @@ static MainMenu* main_menu;
 
 void reload_ui()
 {
+  window_stack_pop_all(true); // frees old main menu.
+  destroy_data(app);
+
+  app = malloc(sizeof (struct app));
+  app->groups = list_create();
+  app->recents = group_create();
+  app->recents->name = "Recently Opened";
+  load_data(app);
+  main_menu = main_menu_show(app);
 }
 
 
@@ -72,7 +81,11 @@ static void inbox_received_callback(DictionaryIterator* iter, void* context)
       free(save_buffer);
 
       // clear out recents menu in case we now point at dead entries.
-      while (list_nth(app->recents->marks, 0)) { list_remove(app->recents->marks, 0); }
+      while (list_length(app->recents->marks) > 0)
+      {
+        mark_destruct((Mark*) list_nth(app->recents->marks, 0));
+        list_remove(app->recents->marks, 0);
+      }
       bytes = size_group(app->recents);
       save_buffer = malloc(bytes);
       serialize_group(app->recents, save_buffer);

@@ -16,5 +16,9 @@ struct app
 };
 typedef struct app App;
 
+// stubs
+void destroy_data(App* app);
+void load_data(App* app);
+
 #endif
 
