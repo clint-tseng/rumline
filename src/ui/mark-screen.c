@@ -7,6 +7,9 @@
 
 #include "mark-screen.h"
 
+// I really hate this but the pebble tick service does not permite a context argument.
+static MarkScreenData* current_mark_screen = NULL;
+
 void _setup_text_value(TextLayer* l)
 {
   text_layer_set_background_color(l, GColorClear);
@@ -30,13 +33,21 @@ void _draw_static_labels(Window* w)
 
   MarkScreenData* data = (MarkScreenData*) window_get_user_data(w);
 
-  data->name = text_layer_create(GRect(0, 0, bounds.size.w, 28));
+  data->name = text_layer_create(GRect(5, 5, bounds.size.w - 40, 16));
   text_layer_set_background_color(data->name, GColorClear);
   text_layer_set_text_color(data->name, GColorChromeYellow);
+  text_layer_set_overflow_mode(data->name, GTextOverflowModeTrailingEllipsis);
   text_layer_set_font(data->name, fonts_get_system_font(FONT_KEY_GOTHIC_14));
-  text_layer_set_text_alignment(data->name, GTextAlignmentCenter);
+  text_layer_set_text_alignment(data->name, GTextAlignmentLeft);
   text_layer_set_text(data->name, data->mark->name);
   layer_add_child(window_layer, text_layer_get_layer(data->name));
+
+  data->clock = text_layer_create(GRect(bounds.size.w - 35, 5, 30, 16));
+  text_layer_set_background_color(data->clock, GColorClear);
+  text_layer_set_text_color(data->clock, GColorChromeYellow);
+  text_layer_set_font(data->clock, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  text_layer_set_text_alignment(data->clock, GTextAlignmentRight);
+  layer_add_child(window_layer, text_layer_get_layer(data->clock));
 
   data->bearing_value = text_layer_create(GRect(0, 23, bounds.size.w, 84));
   _setup_text_value(data->bearing_value);
@@ -65,6 +76,10 @@ void _mark_window_load(Window* w)
   _draw_static_labels(w);
   mark_screen_update(w, "...", "...");
 
+  current_mark_screen = data;
+  tick_timer_service_subscribe(MINUTE_UNIT, mark_screen_tick);
+  mark_screen_tick(NULL, SECOND_UNIT);
+
   data->app->current_mark_screen = w;
 }
 
@@ -73,10 +88,14 @@ void _mark_window_unload(Window* w)
   MarkScreenData* data = (MarkScreenData*) window_get_user_data(w);
 
   text_layer_destroy(data->name);
+  text_layer_destroy(data->clock);
   text_layer_destroy(data->bearing_value);
   text_layer_destroy(data->bearing_label);
   text_layer_destroy(data->distance_value);
   text_layer_destroy(data->distance_label);
+
+  current_mark_screen = NULL;
+  tick_timer_service_unsubscribe();
 
   data->app->current_mark_screen = NULL;
 }
@@ -117,6 +136,16 @@ void mark_screen_update(MarkScreen* w, char* bearing, char* distance)
 
   text_layer_set_text(data->bearing_value, data->bearing);
   text_layer_set_text(data->distance_value, data->distance);
+}
+
+void mark_screen_tick(struct tm* tick_time, TimeUnits time_changed)
+{
+  if (current_mark_screen != NULL)
+  {
+    // only ever take the xx:xx part of the string.
+    clock_copy_time_string(current_mark_screen->time, 6);
+    text_layer_set_text(current_mark_screen->clock, current_mark_screen->time);
+  }
 }
 
 void mark_screen_destruct(MarkScreen* w)
