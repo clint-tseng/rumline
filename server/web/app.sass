@@ -144,9 +144,32 @@ label
   margin-bottom: 1em
   overflow: hidden
   padding-bottom: 2em
+  position: relative
 
   .delete-group
     float: right
+
+  .group-icon
+    background: #999
+    border-top-right-radius: 0.2em
+    height: 1.2em
+    pointer-events: none
+    position: absolute
+    right: 1em
+    top: 1.1em
+    width: 2em
+    &:before
+      @include reify
+      background: inherit
+      border-radius: 0.2em 0.2em 0 0
+      bottom: 100%
+      height: 0.2em
+      left: 0
+      position: absolute
+      width: 1em
+
+  .group-name
+    border-bottom-color: #1aa8f4
 
 .mark
   border-left: 4px solid #ccc
