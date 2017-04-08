@@ -52,12 +52,38 @@ body
   transition: 0.2s opacity
 
 #toolbar
+  $padding: 1em
   background-color: rgba(50, 50, 50, 0.9)
   bottom: 0
   color: #eee
-  padding: 1em
+  padding: $padding
   position: fixed
-  width: 100%
+  width: calc(100% - #{2 * $padding})
+
+  #caltopo-activate
+    float: right
+
+  .subtoolbar
+    background: #777
+    margin: -1em
+      top: 1em
+    max-height: 0
+    padding: 0 1em
+    transition: 0.6s max-height, 0.3s padding
+
+    &.expanded
+      max-height: 30em
+      padding: 1em
+
+    h2
+      padding-bottom: 0.5em
+
+  #caltopo
+    label strong
+      color: #a0ddff
+
+    button
+      margin-right: 1em
 
 #templates, .hide
   display: none

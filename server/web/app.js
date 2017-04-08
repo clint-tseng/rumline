@@ -9,7 +9,11 @@ var remove = function(array, elem)
 
 // UI
 // general
-$(document).on('focus', 'input[type=text], input[type=number]', function() { $('body').addClass('editing'); });
+$(document).on('focus', 'input[type=text], input[type=number]', function()
+{
+  if ($(this).closest('#toolbar').length > 0) return;
+  $('body').addClass('editing');
+});
 $(document).on('blur', 'input[type=text], input[type=number]', function() { $('body').removeClass('editing'); });
 
 // groups
@@ -119,6 +123,73 @@ var renderAll = function()
     for (var j in groups[i].marks) newMark(groups[i], groups[i].marks[j]);
   }
 };
+
+// caltopo
+var caltopoButton = $('#caltopo-activate');
+var caltopoSection = $('#caltopo');
+caltopoButton.on('click', function()
+{
+  var expanded = caltopoSection.hasClass('expanded');
+  if (expanded)
+  {
+    caltopoButton.text('Import from Caltopo');
+    caltopoSection.removeClass('expanded');
+  }
+  else
+  {
+    caltopoButton.text('Cancel');
+    caltopoSection.addClass('expanded');
+  }
+});
+caltopoSection.on('click', 'button', function()
+{
+  // with thanks to alex wetmore (phred.org) for the idea and some sample code:
+  var replace = false;
+  if ($(this).is('#caltopo-replace'))
+  {
+    if (!confirm('Are you sure you want to replace all your current marks with the imported set?')) return;
+    replace = true;
+  }
+
+  var id = /([a-z0-9]+)\/?$/i.exec($('#caltopo-id').val());
+  if (id == null)
+    return alert('Could not recognize a Caltopo ID. Try just pasting the web address of your map.');
+
+  $('body').addClass('loading');
+  $.ajax({ type: 'get', url: '/fetch/caltopo/' + id[1], dataType: 'json',
+    success: function(result)
+    {
+      if (replace) $('#main .delete-group').click();
+
+      // because of how caltopo is structured, first create all empty groups then populate.
+      var groupLookup = {};
+      for (var i in result.Folder)
+      {
+        var group = { name: result.Folder[i].label, marks: [] };
+        groupLookup[result.Folder[i].id] = group;
+        data.groups.push(group);
+        newGroup(group);
+      }
+      for (var i in result.Marker)
+      {
+        var marker = result.Marker[i];
+
+        // merge label and comments to form a name.
+        var name = [];
+        if ((marker.label != null) && (marker.label !== '')) name.push(marker.label);
+        if ((marker.comments != null) && (marker.comments !== '')) name.push(marker.comments);
+
+        var mark = { id: ++data.uid, name: name.join(' '), lat: marker.position.lat, lon: marker.position.lng };
+        var group = groupLookup[marker.folderId]; // caltopo disallows folderless marks
+        group.marks.push(mark);
+        newMark(group, mark);
+      }
+      caltopoButton.click();
+    },
+    error: function() { alert('Something went wrong. Please check your map and try again.'); },
+    complete: function() { $('body').removeClass('loading'); }
+  });
+});
 
 
 // DATA MODEL

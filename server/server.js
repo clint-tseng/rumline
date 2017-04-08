@@ -1,8 +1,18 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var https = require('https');
 
 var server = express();
 var data = require('./data');
+
+var fetchThrough = function(url, stream)
+{
+  https.get(url, function(remote)
+  {
+    remote.pipe(stream);
+    remote.on('end', function() { stream.end(); });
+  }).on('error', function() { stream.end(); });
+};
 
 server.use(bodyParser.text());
 
@@ -24,6 +34,11 @@ server.post('/config/:guid', function(req, res)
     if (result === true) ok(res);
     else res.status(400).type('json').send({ success: false });
   });
+});
+
+server.get('/fetch/caltopo/:id', function(req, res)
+{
+  fetchThrough('https://caltopo.com/m/' + req.params.id + '?format=json', res);
 });
 
 server.post('/prune', function(req, res)

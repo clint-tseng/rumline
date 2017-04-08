@@ -39,7 +39,25 @@ body {
   color: #eee;
   padding: 1em;
   position: fixed;
-  width: 100%; }
+  width: calc(100% - 2em); }
+  #toolbar #caltopo-activate {
+    float: right; }
+  #toolbar .subtoolbar {
+    background: #777;
+    margin: -1em;
+      margin-top: 1em;
+    max-height: 0;
+    padding: 0 1em;
+    transition: 0.6s max-height, 0.3s padding; }
+    #toolbar .subtoolbar.expanded {
+      max-height: 30em;
+      padding: 1em; }
+    #toolbar .subtoolbar h2 {
+      padding-bottom: 0.5em; }
+  #toolbar #caltopo label strong {
+    color: #a0ddff; }
+  #toolbar #caltopo button {
+    margin-right: 1em; }
 
 #templates, .hide {
   display: none; }

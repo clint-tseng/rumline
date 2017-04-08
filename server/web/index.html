@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="app.css"/>
+  <link rel="stylesheet" type="text/css" href="app.css?20170407"/>
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -18,7 +18,14 @@
   </div>
 
   <div id="toolbar">
+    <button id="caltopo-activate">Import from Caltopo</button>
     <button id="save">Save</button>
+    <div class="subtoolbar" id="caltopo">
+      <h2>Import from Caltopo</h2>
+      <label> <input type="text" id="caltopo-id"/> Caltopo ID; for example: https://caltopo.com/m/<strong>AbCd</strong> </label>
+      <button id="caltopo-append">Append</button>
+      <button id="caltopo-replace">Replace All</button>
+    </div>
   </div>
 
   <div id="templates">
@@ -59,7 +66,7 @@
   </div>
 
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-  <script type="text/javascript" src="app.js"></script>
+  <script type="text/javascript" src="app.js?20170407"></script>
 </body>
 </html>
 
